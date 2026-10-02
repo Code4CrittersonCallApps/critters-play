@@ -17,7 +17,9 @@
   var PLAYS_PER_CHAR_PER_DAY = 3;
   var SPIN_CLAIMS_PER_DAY = 1;
 
-  CP.WHEEL_URL = "https://onchainoffgrid-hub.github.io/critters-on-call/wheel.html";
+  CP.WHEEL_URL = "https://onchainoffgrid-hub.github.io/critters-on-call/giving-wheel/";
+  /* Farm Spin (giving-wheel). Legacy wheel.html still exists; Evade Elon & Play earn → Farm Spin. */
+  CP.FARM_SPIN_URL = CP.WHEEL_URL;
   CP.SERVICES_URL = "https://www.sheehanhomestead.com/services";
   CP.BOOKING_HELP_URL = "https://www.sheehanhomestead.com/booking-help";
   CP.HOME_URL = "https://www.sheehanhomestead.com";
@@ -132,7 +134,7 @@
   };
 
   CP.gameSmsHref = function (score, aptitudeId) {
-    var parts = [CP.GAME_SMS_KEYWORD];
+    var parts = [CP.GAME_SMS_KEYWORD, "screenshot"];
     if (aptitudeId && CP.APTITUDES[aptitudeId]) {
       parts.push(CP.APTITUDES[aptitudeId].title);
     }

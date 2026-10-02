@@ -13,6 +13,17 @@
     { id: "spicy", emoji: "🐓", name: "Spicy", x: 170, y: 348 }
   ];
 
+  /* Light animal-fact interrupt prompts (soft pause via HUD msg). */
+  var ANIMAL_FACTS = [
+    "Goats have rectangular pupils — almost 320° vision.",
+    "Muscovy ducks hiss more than they quack.",
+    "Rabbits can see nearly all around them without turning.",
+    "Chickens dream — REM sleep, just like us.",
+    "Pigs can learn names and come when called.",
+    "A goat’s accent? Herd mates teach local “bleats.”"
+  ];
+  /* FOLLOW-UP (not blocking): lake / juke fence collision polish — park for later. */
+
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var scoreEl = document.getElementById("score");
@@ -73,7 +84,7 @@
     var a = document.createElement("a");
     a.className = "claim-chip-link";
     a.href = CrittersPlay.wheelEarnUrl(EARN_ID);
-    a.textContent = "Spin ready · Evade Elon";
+    a.textContent = "Farm Spin ready · Evade Elon";
     claimChip.appendChild(a);
   }
 
@@ -99,7 +110,7 @@
     }
     if (earnBody) {
       var body = "Hit " + EARN_SCORE + " on Evade Elon. " + tip;
-      if (spinReady) body += " Optional: free Wheel spin (1 claim/day, honor-system).";
+      if (spinReady) body += " Optional: Farm Spin (honor-system). Text HIGH SCORE + a screenshot.";
       else if (unclaimed && !canDay) body += " Spin claim used today — try again tomorrow.";
       earnBody.textContent = body;
     }
@@ -111,7 +122,7 @@
       earnServices.rel = "noopener";
     }
     if (earnSms) {
-      earnSms.textContent = "Text HIGH SCORE to 914-263-1311";
+      earnSms.textContent = "Text HIGH SCORE + screenshot to 914-263-1311";
       earnSms.href = CrittersPlay.gameSmsHref
         ? CrittersPlay.gameSmsHref(score, EARN_ID)
         : CrittersPlay.smsHref(CrittersPlay.GAME_SMS_KEYWORD || "HIGH SCORE");
@@ -119,7 +130,7 @@
     if (earnWheel) {
       if (spinReady) {
         earnWheel.hidden = false;
-        earnWheel.textContent = "🎡 Claim free spin";
+        earnWheel.textContent = "🎡 Claim Farm Spin";
         earnWheel.href = CrittersPlay.wheelEarnUrl(EARN_ID);
       } else {
         earnWheel.hidden = true;
@@ -332,8 +343,13 @@
         CrittersPlay.setBest(KEY, t.score);
         bestEl.textContent = String(CrittersPlay.getBest(KEY));
         maybeGrantEarn(t.score);
-        t.msg = "Fed " + n.name + "!";
-        t.msgT = 1;
+        if (Math.random() < 0.28) {
+          t.msg = "✨ " + ANIMAL_FACTS[Math.floor(Math.random() * ANIMAL_FACTS.length)];
+          t.msgT = 2.2;
+        } else {
+          t.msg = "Fed " + n.name + "!";
+          t.msgT = 1;
+        }
         if (t.crew.every(function (c) { return c.fed; })) {
           t.wave += 1;
           if (waveEl) waveEl.textContent = String(t.wave);
@@ -368,7 +384,7 @@
     var best = CrittersPlay.setBest(KEY, state.score);
     bestEl.textContent = String(best);
     overlayTitle.textContent = "Elon ate the shift";
-    overlayMsg.textContent = "Score " + state.score + " · Best " + best + ". See our services · or text HIGH SCORE — or refill and try again.";
+    overlayMsg.textContent = "Score " + state.score + " · Best " + best + ". See our services · or text HIGH SCORE + screenshot — or refill and try again.";
     startBtn.textContent = "Dodge again";
     overlay.classList.remove("hidden");
     if (hintEl) hintEl.style.visibility = "hidden";
