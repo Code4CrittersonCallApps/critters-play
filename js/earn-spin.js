@@ -18,7 +18,7 @@
   var SPIN_CLAIMS_PER_DAY = 1;
 
   CP.WHEEL_URL = "https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/";
-  /* Farm Spin (giving-wheel). Legacy wheel.html still exists; Evade Elon & Play earn → Farm Spin. */
+  /* Stead Spin (legacy path). Legacy wheel.html still exists; Evade Elon & Play earn → Stead Spin. */
   CP.FARM_SPIN_URL = CP.WHEEL_URL;
   CP.SERVICES_URL = "https://www.sheehanhomestead.com/services";
   CP.BOOKING_HELP_URL = "https://www.sheehanhomestead.com/booking-help";

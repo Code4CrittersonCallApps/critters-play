@@ -84,7 +84,7 @@
     var a = document.createElement("a");
     a.className = "claim-chip-link";
     a.href = CrittersPlay.wheelEarnUrl(EARN_ID);
-    a.textContent = "Farm Spin ready · Evade Elon";
+    a.textContent = "Stead Spin ready · Evade Elon";
     claimChip.appendChild(a);
   }
 
@@ -110,7 +110,7 @@
     }
     if (earnBody) {
       var body = "Hit " + EARN_SCORE + " on Evade Elon. " + tip;
-      if (spinReady) body += " Optional: Farm Spin (honor-system). Text HIGH SCORE + a screenshot.";
+      if (spinReady) body += " Optional: Stead Spin (honor-system). Text HIGH SCORE + a screenshot.";
       else if (unclaimed && !canDay) body += " Spin claim used today — try again tomorrow.";
       earnBody.textContent = body;
     }
@@ -130,7 +130,7 @@
     if (earnWheel) {
       if (spinReady) {
         earnWheel.hidden = false;
-        earnWheel.textContent = "🎡 Claim Farm Spin";
+        earnWheel.textContent = "🎡 Claim Stead Spin";
         earnWheel.href = CrittersPlay.wheelEarnUrl(EARN_ID);
       } else {
         earnWheel.hidden = true;

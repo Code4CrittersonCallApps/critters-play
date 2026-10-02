@@ -26,7 +26,7 @@ python3 -m http.server 8771
 3. Win screen CTA order:
    1. **See our services** → https://www.sheehanhomestead.com/services
    2. **Text HIGH SCORE** to **914-263-1311** (screenshot / score)
-4. Optional Wheel: organic unlock still grants an earn (`?earn=gus|betty|elon`). Soft digital prizes, 1 claim/day, honor-system.
+4. Optional Stead Spin: organic unlock still grants an earn (`?earn=gus|betty|elon`). Soft digital prizes, 1 claim/day, honor-system.
 
 Deal path stays **CODE / GOAT** — do **not** use those for game wins.
 

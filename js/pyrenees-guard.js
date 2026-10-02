@@ -147,7 +147,7 @@
       var body = name + (title ? (" — " + title + ".") : ".");
       if (opts.unlocked) body += " Character unlocked.";
       body += " " + tip;
-      if (opts.spinReady) body += " Optional: free Wheel spin (1 claim/day, honor-system).";
+      if (opts.spinReady) body += " Optional: free Stead Spin (1 claim/day, honor-system).";
       else if (opts.spinDeferred) body += " Spin claim used today — try again tomorrow.";
       earnBody.textContent = body;
     }
@@ -167,7 +167,7 @@
     if (earnWheel) {
       if (opts.spinReady && (dog === "gus" || dog === "betty")) {
         earnWheel.hidden = false;
-        earnWheel.textContent = "🎡 Claim free spin";
+        earnWheel.textContent = "🎡 Claim free Stead Spin";
         earnWheel.href = CrittersPlay.wheelEarnUrl(dog);
       } else {
         earnWheel.hidden = true;
@@ -238,7 +238,7 @@
       var a = document.createElement("a");
       a.className = "claim-chip-link";
       a.href = CrittersPlay.wheelEarnUrl(dog);
-      a.textContent = "Spin ready · " + name;
+      a.textContent = "Stead Spin ready · " + name;
       claimChip.appendChild(a);
     });
   }
