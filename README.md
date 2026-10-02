@@ -7,7 +7,7 @@ Entertaining wholesome farm games parents can hand kids — learn a little, favo
 Games: **Evade Elon** · **Barn Cat Defender** · **Pyrenees Guard** · **Critter Match**
 
 ## Live
-https://onchainoffgrid-hub.github.io/critters-play/
+https://Code4CrittersonCallApps.github.io/critters-play/
 
 Real website (consumer win CTA): https://www.sheehanhomestead.com/services
 
