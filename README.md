@@ -2,9 +2,9 @@
 
 Sheehan Homestead · Callahan, FL
 
-Wholesome farm games. Learn a short fact, keep a high score on this device, and spin when you win.
+Wholesome farm games. Learn a short fact, keep a high score, and spin when you win.
 
-Games: **Evade Elon** · **Barn Cat Defender** · **Pyrenees Guard** · **Critter Match**
+Games: **Pyrenees Guard** · **Evade Elon** · **Barncat Defender** · **Ducks to Bed** · **Critter Match**
 
 ## Live
 https://Code4CrittersonCallApps.github.io/critters-play/

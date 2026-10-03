@@ -690,3 +690,228 @@ p { margin: 0; }
   color: #d7e6db;
 }
 .sms-line { margin: 0.1rem 0 0.45rem; }
+
+/* Ducks to Bed */
+.dtb-stage {
+  touch-action: manipulation;
+  border: none;
+  background: transparent;
+  overflow: visible;
+  min-height: 0;
+}
+.dtb-play { display: flex; flex-direction: column; gap: 0.75rem; }
+.dtb-play.hidden { display: none; }
+.dtb-barn {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(111, 154, 122, 0.45);
+  background: linear-gradient(180deg, #2a3830 0%, #1c2822 100%);
+  padding: 0.7rem 0.75rem 0.65rem;
+}
+.dtb-barn.locked { background: linear-gradient(180deg, #1a2420 0%, #141c18 100%); }
+.dtb-door {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  color: #d7e6db;
+}
+.dtb-door-mark {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: var(--font);
+  font-weight: 700;
+  color: #f7f4ee;
+  background: var(--gold);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+.dtb-inside {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  min-height: 1.6rem;
+  margin-top: 0.45rem;
+}
+.dtb-token {
+  font-size: 0.65rem;
+  color: #d7e6db;
+  background: rgba(111, 154, 122, 0.2);
+  border: 1px solid rgba(111, 154, 122, 0.35);
+  border-radius: 999px;
+  padding: 0.12rem 0.45rem;
+}
+.dtb-train { display: flex; flex-direction: column; gap: 0.4rem; }
+.dtb-bird {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-height: 3.15rem;
+}
+.dtb-bird.hop { transform: translateY(-3px); }
+.dtb-bird-name { font-size: 0.9rem; font-weight: 650; line-height: 1.15; }
+.dtb-bird-meta { font-size: 0.7rem; color: var(--muted); }
+.dtb-sprite {
+  position: relative;
+  width: 2.75rem;
+  height: 2.15rem;
+  flex-shrink: 0;
+}
+.dtb-sprite .body,
+.dtb-sprite .head,
+.dtb-sprite .bill,
+.dtb-sprite .knob,
+.dtb-sprite .neck,
+.dtb-sprite .chin {
+  position: absolute;
+  display: block;
+}
+.dtb-sprite.runner .body {
+  width: 0.85rem; height: 1.15rem; left: 0.85rem; bottom: 0.1rem;
+  background: #6d5344; border-radius: 40% 40% 46% 46%;
+}
+.dtb-sprite.runner .head {
+  width: 0.7rem; height: 0.7rem; left: 0.95rem; top: 0.05rem;
+  background: #5a4538; border-radius: 50%;
+}
+.dtb-sprite.runner .bill {
+  width: 0.55rem; height: 0.22rem; left: 1.55rem; top: 0.32rem;
+  background: #e07a3d; border-radius: 0 3px 3px 0;
+}
+.dtb-sprite.pekin .body {
+  width: 1.45rem; height: 1rem; left: 0.55rem; bottom: 0.2rem;
+  background: #f3efe6; border-radius: 50%;
+  box-shadow: inset -5px -3px 0 #e2d9cc;
+}
+.dtb-sprite.pekin .head {
+  width: 0.72rem; height: 0.72rem; left: 1.55rem; top: 0.35rem;
+  background: #f7f4ee; border-radius: 50%;
+}
+.dtb-sprite.pekin .bill {
+  width: 0.48rem; height: 0.28rem; left: 2.15rem; top: 0.58rem;
+  background: #e08a3c; border-radius: 0 4px 4px 0;
+}
+.dtb-sprite.gander .body {
+  width: 1.6rem; height: 1.05rem; left: 0.35rem; bottom: 0.15rem;
+  background: #f7f4ee; border-radius: 50%;
+  box-shadow: inset -6px -3px 0 #e4ddd2;
+}
+.dtb-sprite.gander .neck {
+  width: 0.28rem; height: 0.85rem; left: 1.55rem; bottom: 0.7rem;
+  background: #f7f4ee; border-radius: 40%;
+}
+.dtb-sprite.gander .head {
+  width: 0.62rem; height: 0.55rem; left: 1.45rem; top: 0.02rem;
+  background: #f7f4ee; border-radius: 50%;
+}
+.dtb-sprite.gander .bill {
+  width: 0.55rem; height: 0.2rem; left: 1.95rem; top: 0.22rem;
+  background: #e08a3c; border-radius: 0 3px 3px 0;
+}
+.dtb-sprite.gander .knob {
+  width: 0.28rem; height: 0.22rem; left: 1.85rem; top: 0;
+  background: #e08a3c; border-radius: 50%;
+}
+.dtb-sprite.asian .body {
+  width: 1.45rem; height: 0.95rem; left: 0.3rem; bottom: 0.15rem;
+  background: #8d928a; border-radius: 50%;
+}
+.dtb-sprite.asian .neck {
+  width: 0.26rem; height: 0.95rem; left: 1.4rem; bottom: 0.65rem;
+  background: #7e847c; border-radius: 40%;
+}
+.dtb-sprite.asian .head {
+  width: 0.58rem; height: 0.5rem; left: 1.28rem; top: 0.02rem;
+  background: #9aa096; border-radius: 50%;
+}
+.dtb-sprite.asian .bill {
+  width: 0.5rem; height: 0.18rem; left: 1.75rem; top: 0.22rem;
+  background: #d7a15a; border-radius: 0 3px 3px 0;
+}
+.dtb-sprite.muscovy .body {
+  width: 1.35rem; height: 0.9rem; left: 0.45rem; bottom: 0.2rem;
+  background: #2c3330; border-radius: 50%;
+}
+.dtb-sprite.muscovy .head {
+  width: 0.7rem; height: 0.62rem; left: 1.45rem; top: 0.28rem;
+  background: #24302c; border-radius: 50%;
+}
+.dtb-sprite.muscovy .bill {
+  width: 0.42rem; height: 0.22rem; left: 2.02rem; top: 0.5rem;
+  background: #c45c4a; border-radius: 40%;
+}
+.dtb-sprite.muscovy.small { transform: scale(0.82); transform-origin: 30% 80%; }
+.dtb-sprite.canada .body {
+  width: 1.5rem; height: 0.95rem; left: 0.3rem; bottom: 0.15rem;
+  background: #8a6244; border-radius: 50%;
+}
+.dtb-sprite.canada .neck {
+  width: 0.28rem; height: 0.8rem; left: 1.45rem; bottom: 0.7rem;
+  background: #1c1e1c; border-radius: 40%;
+}
+.dtb-sprite.canada .head {
+  width: 0.55rem; height: 0.48rem; left: 1.32rem; top: 0.05rem;
+  background: #1c1e1c; border-radius: 50%;
+}
+.dtb-sprite.canada .chin {
+  width: 0.28rem; height: 0.18rem; left: 1.55rem; top: 0.28rem;
+  background: #f3efe6; border-radius: 50%;
+}
+.dtb-sprite.canada .bill {
+  width: 0.48rem; height: 0.16rem; left: 1.75rem; top: 0.22rem;
+  background: #2a2a28; border-radius: 0 3px 3px 0;
+}
+.dtb-lock { margin-top: 0.15rem; }
+.dtb-yard {
+  position: relative;
+  height: 11.5rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(111,154,122,0.08), rgba(111,154,122,0.02)),
+    var(--surface);
+  overflow: hidden;
+  touch-action: none;
+}
+.dtb-sleeper {
+  position: absolute;
+  bottom: 0.65rem;
+  width: 5.4rem;
+  margin-left: -2.7rem;
+  text-align: center;
+  pointer-events: none;
+}
+.dtb-sleeper-name { font-size: 0.68rem; font-weight: 700; line-height: 1.15; }
+.dtb-sleeper-breed { font-size: 0.6rem; color: var(--muted); }
+.dtb-sleeper .dtb-sprite { margin: 0 auto; }
+.dtb-kernels { font-size: 0.62rem; color: #d7e6db; min-height: 0.8rem; }
+.dtb-treat {
+  position: absolute;
+  top: 0.35rem;
+  width: 0.55rem;
+  height: 0.7rem;
+  margin-left: -0.28rem;
+  border-radius: 50% 50% 45% 45%;
+  background: #e0b15a;
+  box-shadow: inset -2px -2px 0 #c4923e;
+  transition: top 0.46s linear;
+  z-index: 2;
+}
+.dtb-treat.fall { top: calc(100% - 1.35rem); }
+.dtb-pop {
+  position: absolute;
+  top: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #d7e6db;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
