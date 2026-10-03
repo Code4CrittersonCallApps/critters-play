@@ -1,4 +1,4 @@
-/* Ducks to Bed — cha-cha train into the barn, shut the door, treat the wilds */
+/* Ducks to Bed — critter lady steers the cha-cha train; Betty & wilds impede */
 (function () {
   var KEY = "coc-play-ducks-to-bed-best";
   /* Stead Spin unlock: win the round once.
@@ -22,8 +22,10 @@
     "peking", "peking", "peking", "peking"
   ];
 
-  var WILD_DEFS = [
-    { id: "elon", name: "Elon", color: "#2a2418", accent: "#c45c48" },
+  /* Elon is always out — constant nuisance from the start.
+     Halle and Emilio join later as extra wild-duck trouble. */
+  var ELON_DEF = { id: "elon", name: "Elon", color: "#2a2418", accent: "#c45c48" };
+  var LATE_WILDS = [
     { id: "halle", name: "Halle", color: "#3d3428", accent: "#e8d4b8" },
     { id: "emilio", name: "Emilio", color: "#1a2218", accent: "#f5f0e6" }
   ];
@@ -103,11 +105,16 @@
       score: 0,
       level: 1,
       wilds: [],
-      wildSpawned: false,
+      lateWildsSpawned: false,
       treated: false,
-      bettyX: startX - 40,
-      bettyY: startY + 10,
-      bettyScare: 0,
+      betty: {
+        x: 60,
+        y: H * 0.55,
+        vx: 40,
+        vy: -15,
+        disruptCD: 0,
+        bump: 0
+      },
       msg: "Put away all the ducks",
       msgT: 2.2,
       phase: "herd",
@@ -121,9 +128,28 @@
     for (var t = 0; t < TOTAL * 3; t++) {
       state.trail.push({ x: startX, y: startY + t * (SEG / 3) });
     }
+    /* Elon starts on the field immediately — always a nuisance */
+    state.wilds.push(makeWild(ELON_DEF, W - 50, startY - 40, -45, 10));
+    state.msg = "Elon's in the way — put away all the ducks";
+    state.msgT = 2.2;
     hud();
     btnDoor.hidden = true;
     btnTreat.hidden = true;
+  }
+
+  function makeWild(def, x, y, vx, vy) {
+    return {
+      id: def.id,
+      name: def.name,
+      color: def.color,
+      accent: def.accent,
+      x: x,
+      y: y,
+      vx: vx,
+      vy: vy,
+      scared: 0,
+      disruptCD: 0
+    };
   }
 
   function countIn() {
@@ -155,48 +181,22 @@
     };
   }
 
-  function spawnWilds() {
-    if (state.wildSpawned) return;
-    state.wildSpawned = true;
+  function spawnLateWilds() {
+    if (state.lateWildsSpawned) return;
+    state.lateWildsSpawned = true;
     state.level = Math.max(state.level, 2);
-    state.wilds = WILD_DEFS.map(function (w, i) {
-      return {
-        id: w.id,
-        name: w.name,
-        color: w.color,
-        accent: w.accent,
-        x: 40 + i * 110,
-        y: 200 + (i % 2) * 40,
-        vx: (i % 2 ? 1 : -1) * (35 + i * 8),
-        vy: 20,
-        scared: 0,
-        disruptCD: 0
-      };
-    });
-    state.msg = "Wild ducks! Betty will scare them.";
+    state.wilds.push(makeWild(LATE_WILDS[0], 36, 210, 40, 15));
+    state.wilds.push(makeWild(LATE_WILDS[1], W - 40, 240, -38, -10));
+    state.msg = "Halle and Emilio join Elon — more wild ducks!";
     state.msgT = 2.4;
     state.level = 3;
   }
 
-  function scareWilds(force) {
-    if (!state.wilds.length) return;
-    var any = false;
-    for (var i = 0; i < state.wilds.length; i++) {
-      var w = state.wilds[i];
-      var d = Math.hypot(w.x - state.bettyX, w.y - state.bettyY);
-      if (force || d < 95) {
-        w.scared = 1.8;
-        w.vx = (w.x < state.bettyX ? -1 : 1) * 120;
-        w.vy = (w.y < state.bettyY ? -1 : 1) * 80;
-        any = true;
-      }
-    }
-    if (any) {
-      state.bettyScare = 0.6;
-      state.msg = "Betty scares them off!";
-      state.msgT = 1.2;
-    }
+  function ensureAllWilds() {
+    /* Treat needs all three wilds present */
+    if (!state.lateWildsSpawned) spawnLateWilds();
   }
+
 
   function endGame(won) {
     if (!state || state.over) return;
@@ -218,13 +218,13 @@
     if (won) {
       overlayMsg.textContent = "All 17 put away, door shut, wild ducks treated. Best clears: " + result.best + ".";
     } else {
-      overlayMsg.textContent = "Too many escapes (" + state.escapes + "). Steer the train in, shut the door, then treat the wilds.";
+      overlayMsg.textContent = "Too many escapes (" + state.escapes + "). Critter lady steers them in, shuts the door, then treats the wilds. Dodge Elon and Betty.";
     }
     startBtn.textContent = "Bed them again";
     overlay.classList.remove("hidden");
     btnDoor.hidden = true;
     btnTreat.hidden = true;
-    if (hintEl) hintEl.textContent = "Drag or tap Left/Right · lead the train into the barn · shut the door";
+    if (hintEl) hintEl.textContent = "Drag or tap Left/Right · dodge Elon & Betty · shut the door · treat the wilds";
   }
 
   function update(dt) {
@@ -256,10 +256,8 @@
     var minY = s.doorShut ? DOOR_Y + DOOR_H + 20 : BARN_TOP + 40;
     s.py = Math.max(minY, Math.min(H - 40, s.py));
 
-    /* Betty follows near the side of the train */
-    s.bettyX += (s.px - 36 - s.bettyX) * Math.min(1, 4 * dt);
-    s.bettyY += (s.py + 8 - s.bettyY) * Math.min(1, 4 * dt);
-    if (s.bettyScare > 0) s.bettyScare -= dt;
+    /* Betty wanders the yard and bumps the train (impediment, not helper) */
+    updateBetty(s, dt);
 
     /* Trail for snake follow */
     s.trail.unshift({ x: s.px, y: s.py });
@@ -342,9 +340,9 @@
       s.msgT = 1.8;
     }
 
-    /* Wild ducks from level 2 once half the flock is in (or after ~12s) */
-    if (!s.wildSpawned && (inCount >= 8 || s.march > 12)) {
-      spawnWilds();
+    /* Halle & Emilio join later; Elon was already out from the start */
+    if (!s.lateWildsSpawned && (inCount >= 8 || s.march > 12)) {
+      spawnLateWilds();
     }
 
     /* Wild AI */
@@ -378,9 +376,6 @@
       wild.x = Math.max(16, Math.min(W - 16, wild.x));
       wild.y = Math.max(DOOR_Y + DOOR_H + 10, Math.min(H - 30, wild.y));
     }
-
-    /* Betty auto-scares when wilds get close */
-    if (s.wilds.length) scareWilds(false);
 
     if (s.phase === "treat") {
       btnTreat.hidden = false;
@@ -454,10 +449,44 @@
     e.restore();
   }
 
-  function drawBetty(e, x, y, scare) {
+  function updateBetty(s, dt) {
+    var b = s.betty;
+    if (!b) return;
+    if (b.bump > 0) b.bump -= dt;
+    if (b.disruptCD > 0) b.disruptCD -= dt;
+    /* Drift toward the train head to get in the way */
+    var ax = s.px - b.x;
+    var ay = s.py - b.y;
+    var al = Math.hypot(ax, ay) || 1;
+    b.vx += (ax / al) * 50 * dt;
+    b.vy += (ay / al) * 35 * dt;
+    var spd = Math.hypot(b.vx, b.vy);
+    if (spd > 85) { b.vx *= 85 / spd; b.vy *= 85 / spd; }
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+    var minY = DOOR_Y + DOOR_H + 12;
+    if (b.x < 20) { b.x = 20; b.vx = Math.abs(b.vx); }
+    if (b.x > W - 20) { b.x = W - 20; b.vx = -Math.abs(b.vx); }
+    if (b.y < minY) { b.y = minY; b.vy = Math.abs(b.vy); }
+    if (b.y > H - 36) { b.y = H - 36; b.vy = -Math.abs(b.vy); }
+    if (b.disruptCD <= 0 && Math.hypot(b.x - s.px, b.y - s.py) < 30) {
+      b.disruptCD = 1.8;
+      b.bump = 0.5;
+      s.msg = "Betty's in the way!";
+      s.msgT = 1.2;
+      for (var k = 0; k < s.birds.length; k++) {
+        if (!s.birds[k].inBarn) s.birds[k].spook = 0.6 + Math.random() * 0.5;
+      }
+      /* Nudge player aside a little */
+      s.px += (s.px < b.x ? -1 : 1) * 18;
+      s.px = Math.max(24, Math.min(W - 24, s.px));
+    }
+  }
+
+  function drawBetty(e, betty) {
     e.save();
-    e.translate(x, y);
-    if (scare > 0) e.rotate(Math.sin(scare * 30) * 0.08);
+    e.translate(betty.x, betty.y);
+    if (betty.bump > 0) e.rotate(Math.sin(betty.bump * 28) * 0.12);
     if (bettyImg && bettyImg.complete) {
       e.drawImage(bettyImg, -18, -18, 36, 36);
     } else {
@@ -472,28 +501,49 @@
     e.font = "bold 8px sans-serif";
     e.textAlign = "center";
     e.fillText("Betty", 0, 22);
-    if (scare > 0) {
-      e.fillStyle = "rgba(253,230,138,0.85)";
-      e.font = "bold 10px sans-serif";
-      e.fillText("WOOF", 0, -22);
-    }
     e.restore();
   }
 
-  function drawFarmer(e, x, y) {
+  /* Critter lady — white woman, darker blonde hair; she herds the train */
+  function drawCritterLady(e, x, y) {
     e.save();
     e.translate(x, y);
-    e.fillStyle = "#3d5a40";
-    e.beginPath(); e.ellipse(0, 6, 9, 7, 0, 0, Math.PI * 2); e.fill();
-    e.fillStyle = "#e8c48a";
-    e.beginPath(); e.arc(0, -6, 6, 0, Math.PI * 2); e.fill();
-    e.fillStyle = "#5a3a1a";
-    e.fillRect(-7, -12, 14, 3);
-    e.fillRect(-4, -14, 8, 3);
+    /* torso / jeans */
+    e.fillStyle = "#3d5c8a";
+    e.beginPath(); e.ellipse(0, 10, 8, 7, 0, 0, Math.PI * 2); e.fill();
+    /* shirt */
+    e.fillStyle = "#c45c48";
+    e.beginPath(); e.ellipse(0, 2, 8, 7, 0, 0, Math.PI * 2); e.fill();
+    /* arms */
+    e.strokeStyle = "#e6c4a0";
+    e.lineWidth = 2.5;
+    e.lineCap = "round";
+    e.beginPath(); e.moveTo(-8, 2); e.lineTo(-12, 8); e.stroke();
+    e.beginPath(); e.moveTo(8, 2); e.lineTo(12, 8); e.stroke();
+    /* neck + face (light skin) */
+    e.fillStyle = "#e6c4a0";
+    e.fillRect(-2, -6, 4, 4);
+    e.beginPath(); e.arc(0, -10, 6.2, 0, Math.PI * 2); e.fill();
+    /* darker blonde hair */
+    e.fillStyle = "#b08a3a";
+    e.beginPath();
+    e.ellipse(0, -12, 7.2, 5.5, 0, Math.PI, Math.PI * 2);
+    e.fill();
+    e.beginPath(); e.ellipse(-5.5, -9, 2.4, 4, 0.2, 0, Math.PI * 2); e.fill();
+    e.beginPath(); e.ellipse(5.5, -9, 2.4, 4, -0.2, 0, Math.PI * 2); e.fill();
+    e.beginPath(); e.ellipse(0, -8, 6.5, 3.5, 0, 0, Math.PI); e.fill();
+    /* eyes */
+    e.fillStyle = "#3a2a18";
+    e.beginPath(); e.arc(-2.2, -10, 1, 0, Math.PI * 2); e.fill();
+    e.beginPath(); e.arc(2.2, -10, 1, 0, Math.PI * 2); e.fill();
+    /* small smile */
+    e.strokeStyle = "#a06850";
+    e.lineWidth = 1;
+    e.beginPath(); e.arc(0, -8.2, 2.2, 0.15, Math.PI - 0.15); e.stroke();
     e.fillStyle = "#fde68a";
-    e.font = "bold 8px sans-serif";
+    e.font = "bold 7px sans-serif";
     e.textAlign = "center";
-    e.fillText("You", 0, 20);
+    e.fillText("Critter lady", 0, 22);
     e.restore();
   }
 
@@ -555,8 +605,8 @@
 
     for (var w = 0; w < s.wilds.length; w++) drawWild(e, s.wilds[w]);
 
-    drawBetty(e, s.bettyX, s.bettyY, s.bettyScare);
-    if (!(s.doorShut && countIn() >= TOTAL)) drawFarmer(e, s.px, s.py);
+    if (s.betty) drawBetty(e, s.betty);
+    if (!(s.doorShut && countIn() >= TOTAL)) drawCritterLady(e, s.px, s.py);
 
     /* HUD strip */
     e.fillStyle = "rgba(15,20,12,0.5)";
@@ -599,21 +649,21 @@
       return;
     }
     state.doorShut = true;
-    state.phase = state.wildSpawned ? "treat" : "treat";
-    if (!state.wildSpawned) spawnWilds();
+    state.phase = "treat";
+    ensureAllWilds();
     btnDoor.hidden = true;
     btnTreat.hidden = false;
-    state.msg = "Door shut! Give the wild ducks a treat.";
+    state.msg = "Door shut! Critter lady — give the wild ducks a treat.";
     state.msgT = 2.5;
-    if (hintEl) hintEl.textContent = "Tap Give treat — Elon, Halle, and Emilio stay outside";
+    if (hintEl) hintEl.textContent = "Tap Give treat — you (critter lady) feed Elon, Halle, and Emilio";
     hud();
   }
 
   function giveTreat() {
     if (!state || state.over || !state.doorShut || countIn() < TOTAL) return;
-    if (!state.wildSpawned) spawnWilds();
+    ensureAllWilds();
     state.treated = true;
-    state.msg = "Treats tossed — bedtime done!";
+    state.msg = "Critter lady tossed treats — bedtime done!";
     state.msgT = 1.5;
     btnTreat.hidden = true;
     endGame(true);
@@ -627,7 +677,7 @@
     overlay.classList.add("hidden");
     running = true;
     last = 0;
-    if (hintEl) hintEl.textContent = "Drag or use Left/Right — the flock follows you into the barn";
+    if (hintEl) hintEl.textContent = "Steer as the critter lady — dodge Elon and Betty, lead the train into the barn";
   }
 
   startBtn.addEventListener("click", start);
@@ -676,10 +726,6 @@
     if (!state.doorShut && countIn() >= TOTAL &&
         p.x > DOOR_X && p.x < DOOR_X + DOOR_W && p.y > DOOR_Y && p.y < DOOR_Y + DOOR_H) {
       shutDoor();
-    }
-    /* Tap Betty to force-scare */
-    if (state.wilds.length && Math.hypot(p.x - state.bettyX, p.y - state.bettyY) < 28) {
-      scareWilds(true);
     }
   });
   canvas.addEventListener("pointermove", function (e) {
