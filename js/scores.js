@@ -8,7 +8,7 @@
     ["coc-play-pyrenees-guard-best", 400],
     ["coc-play-evade-elon-best", 600],
     ["coc-play-barn-cat-best", 300],
-    ["coc-play-ducks-to-bed-best", 13],
+    ["coc-play-ducks-to-bed-best", 1],
     ["coc-play-critter-match-best", 1000]
   ];
 

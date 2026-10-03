@@ -986,3 +986,16 @@ p { margin: 0; }
   color: var(--muted);
   font-weight: 600;
 }
+
+/* Ducks to Bed — on-screen steer + actions */
+.dtb-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  justify-content: space-between;
+}
+.dtb-controls .btn { min-height: 2.75rem; flex: 1; touch-action: manipulation; }
+.dtb-controls #btn-door,
+.dtb-controls #btn-treat { flex: 1.4; }
+.dtb-controls #btn-door[hidden],
+.dtb-controls #btn-treat[hidden] { display: none !important; }

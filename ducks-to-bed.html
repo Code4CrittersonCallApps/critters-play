@@ -4,13 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#243028" />
-<meta name="description" content="Fowl to Bed — coax the evening train into the barn. Critters on Call Play." />
-<title>Fowl to Bed · Critters on Call Play</title>
+<meta name="description" content="Ducks to Bed — steer the cha-cha train into the barn, shut the door, treat the wild ducks. Critters on Call Play." />
+<title>Ducks to Bed · Critters on Call Play</title>
 <link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/styles.css?v=scoregate" />
+<link rel="stylesheet" href="css/styles.css?v=ducks1" />
 </head>
 <body>
 <div class="app">
@@ -19,7 +19,7 @@
       <a class="brand" href="index.html">
         <img class="brand-logo" src="assets/pyrenees-logo.png" alt="" width="36" height="36" />
         <span class="min-w-0">
-          <span class="brand-title">Fowl to Bed</span>
+          <span class="brand-title">Ducks to Bed</span>
           <span class="brand-sub">Critters on Call Play</span>
         </span>
       </a>
@@ -28,51 +28,39 @@
   </header>
   <main class="main">
     <div class="game-shell">
-      <p class="game-lede text-sm muted">Ducks and geese train toward the barn at dusk. Coax the flock you can reach inside, then lock up.</p>
+      <p class="game-lede text-sm muted">Steer the cha-cha train into the barn, shut the door, then treat the wild ducks. Put away all the ducks.</p>
       <div class="game-hud">
-        <div class="hud-stat"><span class="hud-label">Score</span><span class="hud-value tabular" id="score">0</span></div>
-        <div class="hud-stat"><span class="hud-label">In barn</span><span class="hud-value tabular" id="bedded">0</span></div>
-        <div class="hud-stat"><span class="hud-label">Treats</span><span class="hud-value tabular" id="treats">0</span></div>
+        <div class="hud-stat"><span class="hud-label">In barn</span><span class="hud-value tabular" id="bedded">0/17</span></div>
+        <div class="hud-stat"><span class="hud-label">Door</span><span class="hud-value tabular" id="door">Open</span></div>
+        <div class="hud-stat"><span class="hud-label">Escapes</span><span class="hud-value tabular" id="escapes">0</span></div>
         <div class="hud-stat"><span class="hud-label">Best</span><span class="hud-value tabular" id="best">0</span></div>
       </div>
       <div class="play-prompts" aria-label="Learn and spin">
         <p class="learn-prompt" id="learn-prompt">The ducks live with the chickens, and they lay eggs on the ground instead of in the nesting boxes the way the chickens do.</p>
         <p class="spin-prompt" id="spin-prompt" hidden></p>
       </div>
-      <div class="dtb-play hidden" id="play">
-        <div class="dtb-barn" id="barn">
-          <div class="dtb-door">
-            <span id="door-label">Barn door open</span>
-            <span class="dtb-door-mark" id="door-mark">Open</span>
-          </div>
-          <div class="dtb-inside" id="inside" aria-label="Birds in the barn"></div>
-        </div>
-        <div class="dtb-train" id="train"></div>
-        <button type="button" class="btn btn-primary btn-block dtb-lock" id="lock-btn" hidden>Lock the barn</button>
-        <div class="dtb-yard" id="yard" hidden aria-label="Toss treats to the birds who sleep outside"></div>
-        <button type="button" class="btn btn-primary btn-block" id="settled-btn" hidden>They're settled</button>
-      </div>
-      <div class="game-stage dtb-stage" id="stage">
-        <div class="game-overlay" id="overlay" style="position:relative;min-height:16rem;border-radius:1rem;border:1px solid var(--border)">
-          <div class="fowl-kinds" aria-hidden="true">
-            <span class="fowl-kind"><span class="dtb-sprite runner"><span class="neck"></span><span class="body"></span><span class="head"></span><span class="bill"></span></span>Runner</span>
-            <span class="fowl-kind"><span class="dtb-sprite pekin"><span class="body"></span><span class="head"></span><span class="bill"></span></span>Pekin</span>
-            <span class="fowl-kind"><span class="dtb-sprite gander"><span class="neck"></span><span class="body"></span><span class="head"></span><span class="knob"></span><span class="bill"></span></span>Gander</span>
-            <span class="fowl-kind"><span class="dtb-sprite canada"><span class="neck"></span><span class="body"></span><span class="head"></span><span class="chin"></span><span class="bill"></span></span>Canada</span>
-            <span class="fowl-kind"><span class="dtb-sprite muscovy small"><span class="body"></span><span class="head"></span><span class="bill"></span></span>Muscovy</span>
-          </div>
-          <h2 id="overlay-title">Fowl to Bed</h2>
-          <p id="overlay-msg">Tap each bird to coax it up the train and into the barn. Lock the door, then toss treats to Elon the Muscovy duck, Emilio the Canada goose, and Halle Berry, the smaller female Muscovy. They stay outside.</p>
+      <div class="game-stage" id="stage">
+        <canvas id="canvas" width="340" height="480" aria-label="Ducks to Bed game"></canvas>
+        <div class="game-overlay" id="overlay">
+          <p class="overlay-emoji" aria-hidden="true">🦆</p>
+          <h2 id="overlay-title">Ducks to Bed</h2>
+          <p id="overlay-msg">Steer left and right — the flock follows in a cha-cha train. Lead all 17 into the barn, shut the door, then give the wild ducks a treat. Betty scares Elon, Halle, and Emilio.</p>
           <p class="win-line" id="win-line" hidden></p>
           <a class="btn btn-outline btn-block" id="win-spin" hidden style="display:none">Spin Stead Spin</a>
           <button type="button" class="btn btn-primary btn-block" id="start-btn">Start bedtime</button>
         </div>
       </div>
-      <p class="game-hint" id="hint">Tap a bird to coax it toward the barn</p>
+      <div class="game-controls dtb-controls" id="controls">
+        <button type="button" class="btn btn-outline" id="btn-left" aria-label="Move left">◀ Left</button>
+        <button type="button" class="btn btn-primary" id="btn-door" hidden>Shut door</button>
+        <button type="button" class="btn btn-primary" id="btn-treat" hidden>Give treat</button>
+        <button type="button" class="btn btn-outline" id="btn-right" aria-label="Move right">Right ▶</button>
+      </div>
+      <p class="game-hint" id="hint">Drag or tap Left/Right · lead the train into the barn · shut the door</p>
     </div>
   </main>
 </div>
-<script src="js/scores.js?v=scoregate"></script>
-<script src="js/ducks-to-bed.js"></script>
+<script src="js/scores.js?v=ducks1"></script>
+<script src="js/ducks-to-bed.js?v=ducks1"></script>
 </body>
 </html>
