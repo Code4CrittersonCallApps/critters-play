@@ -48,23 +48,26 @@
         <div class="hero-copy">
           <span class="pill">Play hub</span>
           <h1 style="font-size:1.5rem">Critters on Call Play</h1>
-          <p class="text-sm muted" style="max-width:20rem">Entertaining wholesome farm games parents can hand kids — learn a little, favor to parents. Win → real website.</p>
+          <p class="text-sm muted" style="max-width:20rem">Wholesome farm games. Learn a short fact, beat your high score, then spin.</p>
         </div>
       </section>
 
       <section class="play-path" aria-label="How to play and win">
         <h2>How to play &amp; win</h2>
         <ol>
-          <li>Pick a game — start with <strong>Pyrenees Guard</strong> as <strong>Sophie</strong> (Lead Guardian)</li>
-          <li>Unlock aptitude + named prize: Gus at <strong>250</strong> · Betty at <strong>500</strong> · Evade Elon at <strong>300</strong></li>
-          <li>Win screen → <strong>See our services</strong> on sheehanhomestead.com · then text <strong>HIGH SCORE</strong> to <strong>914-263-1311</strong></li>
-          <li>Optional: earn a Wheel spin (1 claim/day) — soft digital prizes, honor-system</li>
+          <li>Pick a game. Your <strong>high score</strong> stays on this device.</li>
+          <li>Read the short farm fact.</li>
+          <li>Beat your high score, or finish the round. Then <strong>spin</strong>.</li>
         </ol>
-        <p class="text-xs muted" style="margin:0 0 0.55rem">Caps: <strong>3 plays / character / day</strong> · <strong>1 free spin claim / device / day</strong> · deal codes (GOAT / CODE) stay separate from game wins.</p>
+        <div class="play-prompts" aria-label="Learn and spin">
+          <p class="learn-prompt" id="learn-prompt">Muscovy ducks hiss more than they quack.</p>
+          <p class="spin-prompt"><a href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a></p>
+        </div>
+        <p class="text-xs muted" style="margin:0.55rem 0 0.55rem">Text HIGH SCORE to 914-263-1311</p>
         <div class="play-path-actions">
-          <a class="btn btn-primary btn-block" href="pyrenees-guard.html">Play Pyrenees Guard as Sophie</a>
-          <a class="btn btn-outline btn-block" href="evade-elon.html">Play Evade Elon (score 300 → prize + spin)</a>
-          <a class="btn btn-outline btn-block" href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener">See our services</a>
+          <a class="btn btn-primary btn-block" href="pyrenees-guard.html">Play Pyrenees Guard</a>
+          <a class="btn btn-outline btn-block" href="evade-elon.html">Play Evade Elon</a>
+          <a class="btn btn-outline btn-block" href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a>
         </div>
       </section>
 
@@ -79,7 +82,6 @@
             <span class="door-body">
               <span class="door-title">Evade Elon</span>
               <span class="door-desc">Feed the crew. Don't let Elon Muscovy steal the grain.</span>
-              <span class="door-desc door-earn-note">Score 300 → Grain Guard STEM spark + spin</span>
             </span>
             <svg class="door-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </a>
@@ -96,7 +98,6 @@
             <span class="door-body">
               <span class="door-title">Pyrenees Guard</span>
               <span class="door-desc">Sophie, Gus &amp; Betty defend the red barn under the live oak.</span>
-              <span class="door-desc door-earn-note">Sophie Farm Favor · Gus scout badge · Betty visit pass</span>
             </span>
             <svg class="door-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </a>
@@ -116,12 +117,13 @@
         <a href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener">Services</a>
         ·
         <a href="https://www.sheehanhomestead.com" target="_blank" rel="noopener">Home</a>
-        · deal texts use CODE / GOAT, not HIGH SCORE
+        · high scores stay on this device
       </p>
 
       <p class="footer-tiny">Sheehan Homestead · Callahan, FL · In Critters We Trust</p>
     </div>
   </main>
 </div>
+<script src="js/scores.js"></script>
 </body>
 </html>

@@ -37,31 +37,31 @@
   CP.APTITUDES = {
     sophie: {
       id: "sophie",
-      title: "Lead Guardian",
+      title: "",
       blurb: "Balanced watch — the farmer's dog.",
-      prize: "Farm Favor unlocked",
-      tip: "Wholesome farm game parents can hand kids — learn a little, then peek at visit options on Services."
+      prize: "",
+      tip: ""
     },
     gus: {
       id: "gus",
-      title: "Night Scout",
+      title: "",
       blurb: "Fast on his feet after dark.",
-      prize: "Mobile party scout badge",
-      tip: "Explore the mobile petting zoo on our Services page."
+      prize: "",
+      tip: ""
     },
     betty: {
       id: "betty",
-      title: "Barn Queen",
+      title: "",
       blurb: "Bigger bark, wider reach.",
-      prize: "Barn Queen visit pass",
-      tip: "Visit Us / farm experiences — see what's open on Services."
+      prize: "",
+      tip: ""
     },
     elon: {
       id: "elon",
-      title: "Grain Guard",
+      title: "",
       blurb: "Fed the crew. Dodged the Muscovy.",
-      prize: "Grain Guard STEM spark",
-      tip: "Learning & STEM-on-farm flavor — explore on Services."
+      prize: "",
+      tip: ""
     }
   };
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#c9a227" />
+<meta name="theme-color" content="#243028" />
 <meta name="description" content="Evade Elon — feed the crew, dodge Elon Muscovy. Critters on Call Play." />
 <title>Evade Elon · Critters on Call Play</title>
 <link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
@@ -37,34 +37,25 @@
         <div class="hud-stat"><span class="hud-label">Best</span><span class="hud-value tabular" id="best">0</span></div>
       </div>
       <p class="cap-note text-xs muted" id="cap-note" aria-live="polite"></p>
+      <div class="play-prompts" aria-label="Learn and spin">
+        <p class="learn-prompt" id="learn-prompt">Muscovy ducks hiss more than they quack.</p>
+        <p class="spin-prompt"><a href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a></p>
+      </div>
       <div class="game-stage" id="stage">
         <canvas id="canvas" width="340" height="440" aria-label="Evade Elon game"></canvas>
         <div class="game-overlay" id="overlay">
           <p class="overlay-emoji" aria-hidden="true">🦆</p>
           <h2 id="overlay-title">Evade Elon</h2>
-          <p id="overlay-msg">Drag to move. Get close and tap to feed Kneepads, Sassy, mRNA, Jelly, Piggy &amp; crew. Elon Muscovy steals your grain if he catches you. Refill at the GRAIN trough. Score 300 → Grain Guard STEM spark + Stead Spin · text HIGH SCORE + screenshot · then See our services.</p>
+          <p id="overlay-msg">Drag to move. Get close and tap to feed the crew. Elon Muscovy steals your grain if he catches you. Refill at the GRAIN trough.</p>
+          <p class="win-line" id="win-line" hidden></p>
+          <a class="btn btn-outline btn-block" id="win-spin" href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/" hidden>Spin Stead Spin</a>
+          <p class="sms-line text-xs muted" id="sms-line" hidden>Text HIGH SCORE to 914-263-1311</p>
           <button type="button" class="btn btn-primary" id="start-btn">Start feeding</button>
         </div>
       </div>
-      <p class="game-hint" id="hint">Drag to run · tap near a hungry animal to feed · refill at GRAIN · score 300 → STEM spark + Stead Spin</p>
-      <div class="claim-chip-bar hidden" id="claim-chip" aria-live="polite"></div>
+      <p class="game-hint" id="hint">Drag to run · tap near a hungry animal to feed · refill at GRAIN</p>
     </div>
   </main>
-</div>
-<div class="earn-modal hidden" id="earn-modal" aria-hidden="true" role="dialog" aria-labelledby="earn-title">
-  <div class="earn-modal-card">
-    <p class="earn-modal-emoji" aria-hidden="true">🏅</p>
-    <p class="aptitude-badge" id="earn-aptitude" hidden></p>
-    <h2 id="earn-title">You earned an award</h2>
-    <p class="prize-line" id="earn-prize" hidden></p>
-    <p id="earn-body" class="earn-modal-body">Entertaining farm games — learn a little. Parents: see our services on the real website.</p>
-    <div class="earn-modal-actions">
-      <a class="btn btn-primary btn-block" id="earn-services" href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener">See our services</a>
-      <a class="btn btn-outline btn-block" id="earn-sms" href="sms:9142631311?&body=HIGH%20SCORE">Text HIGH SCORE + screenshot to 914-263-1311</a>
-      <a class="btn btn-outline btn-block" id="earn-wheel" href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/" rel="noopener" hidden>🎡 Claim Stead Spin</a>
-      <button type="button" class="btn btn-ghost btn-block" id="earn-keep">Keep playing</button>
-    </div>
-  </div>
 </div>
 <script src="js/scores.js"></script>
 <script src="js/earn-spin.js"></script>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#c9a227" />
+<meta name="theme-color" content="#243028" />
 <meta name="description" content="Critter Match — match the Sheehan Homestead roster. Critters on Call Play." />
 <title>Critter Match · Critters on Call Play</title>
 <link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
@@ -35,6 +35,10 @@
         <div class="hud-stat"><span class="hud-label">Miss</span><span class="hud-value tabular" id="miss">0</span></div>
         <div class="hud-stat"><span class="hud-label">Best</span><span class="hud-value tabular" id="best">0</span></div>
       </div>
+      <div class="play-prompts" aria-label="Learn and spin">
+        <p class="learn-prompt" id="learn-prompt">Muscovy ducks hiss more than they quack.</p>
+        <p class="spin-prompt"><a href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a></p>
+      </div>
       <div class="cm-play" id="play-area">
         <div>
           <p class="text-xs muted" style="margin-bottom:0.5rem">1 · Tap a critter</p>
@@ -52,14 +56,16 @@
             <span aria-hidden="true">🐐🐱🦆🪿🐔🐷🐰</span>
           </div>
           <h2 id="overlay-title">Critter Match</h2>
-          <p id="overlay-msg">Match Sophie the Great Pyrenees, tuxedo barn cat, Pekin duck, Toulouse goose, Rhode Island Red hen, dwarf goats, piggy &amp; bunnies to their names and facts.</p>
+          <p id="overlay-msg">Match each critter to the right name and fact. Finish the board to win.</p>
+          <p class="win-line" id="win-line" hidden></p>
+          <a class="btn btn-outline btn-block" id="win-spin" href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/" hidden>Spin Stead Spin</a>
           <div class="cm-chips">
             <span>Sophie</span><span>Tuxedo cat</span><span>Pekin</span><span>Toulouse</span><span>RIR hen</span><span>Dwarf goat</span><span>Piggy</span><span>Bunny</span>
           </div>
           <button type="button" class="btn btn-primary btn-block" id="start-btn">Start matching</button>
         </div>
       </div>
-      <p class="game-hint" id="hint" style="visibility:hidden">Tap a critter, then tap the matching name &amp; fact</p>
+      <p class="game-hint" id="hint" style="visibility:hidden">Tap a critter, then tap the matching name and fact</p>
       <div id="done" class="hidden"></div>
     </div>
   </main>

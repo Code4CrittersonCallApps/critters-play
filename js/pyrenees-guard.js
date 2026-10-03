@@ -23,9 +23,9 @@
     { emoji: "🐔", label: "Hen", ox: 18, oy: 0 }
   ];
   var GUARDS = [
-    { id: "sophie", name: "Sophie", role: "Lead guardian", img: "assets/sophie.png", unlockAt: 0, speed: 160, bark: 84, blurb: "The real farmer's dog. Balanced watch." },
-    { id: "gus", name: "Gus", role: "Night scout", img: "assets/gus.png", unlockAt: 250, speed: 190, bark: 76, blurb: "Black-and-tan pyr mix. Faster on his feet." },
-    { id: "betty", name: "Betty", role: "Barn queen", img: "assets/betty.png", unlockAt: 500, speed: 145, bark: 100, blurb: "Classic cream Pyrenees. Bigger bark, wider reach." }
+    { id: "sophie", name: "Sophie", role: "Balanced watch", img: "assets/sophie.png", unlockAt: 0, speed: 160, bark: 84, blurb: "The real farmer's dog. Balanced watch." },
+    { id: "gus", name: "Gus", role: "Faster on his feet", img: "assets/gus.png", unlockAt: 250, speed: 190, bark: 76, blurb: "Black-and-tan pyr mix. Faster on his feet." },
+    { id: "betty", name: "Betty", role: "Wider bark", img: "assets/betty.png", unlockAt: 500, speed: 145, bark: 100, blurb: "Classic cream Pyrenees. Bigger bark, wider reach." }
   ];
 
   var canvas = document.getElementById("canvas");
@@ -65,42 +65,19 @@
   } catch (e) {}
 
   bestEl.textContent = CrittersPlay.getBest(KEY);
+  var runBest = CrittersPlay.getBest(KEY);
 
   function currentGuard() {
     return GUARDS.find(function (g) { return g.id === selectedId; }) || GUARDS[0];
   }
 
-  function isUnlocked(g) {
-    var best = CrittersPlay.getBest(KEY);
-    return g.unlockAt === 0 || unlocked.indexOf(g.id) >= 0 || best >= g.unlockAt;
+  function isUnlocked() {
+    return true;
   }
 
-  var earnModal = document.getElementById("earn-modal");
-  var earnTitle = document.getElementById("earn-title");
-  var earnBody = document.getElementById("earn-body");
-  var earnSms = document.getElementById("earn-sms");
-  var earnWheel = document.getElementById("earn-wheel");
-  var earnKeep = document.getElementById("earn-keep");
-  var claimChip = document.getElementById("claim-chip");
-  var earnAptitude = document.getElementById("earn-aptitude");
-  var earnPrize = document.getElementById("earn-prize");
-  var earnServices = document.getElementById("earn-services");
   var capNote = document.getElementById("cap-note");
-  var toastTimer = null;
-  var pausedForEarn = false;
-  var pendingEarnDog = null;
-  var sophieAwardShown = false;
 
-  function flashUnlockToast(name, title) {
-    var msg = name + " unlocked!";
-    if (title) msg += " · " + title;
-    msg += " Text HIGH SCORE to claim.";
-    setMsg(msg);
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () {
-      if (running && state && !state.over) setMsg(currentGuard().name + " is on watch");
-    }, 3200);
-  }
+
 
   function updateCapNote() {
     if (!capNote || !window.CrittersPlay || !CrittersPlay.playsRemainingToday) return;
@@ -109,166 +86,15 @@
     capNote.textContent = g.name + ": " + left + " play" + (left === 1 ? "" : "s") + " left today (max " + CrittersPlay.PLAYS_PER_CHAR_PER_DAY + "/day)";
   }
 
-  function showWinModal(opts) {
-    if (!earnModal || !window.CrittersPlay) return;
-    opts = opts || {};
-    var dog = String(opts.dogId || "").toLowerCase();
-    var apt = CrittersPlay.getAptitude ? CrittersPlay.getAptitude(dog) : null;
-    if (apt && CrittersPlay.grantAptitudeAward) CrittersPlay.grantAptitudeAward(dog);
-    var name = CrittersPlay.earnDisplayName ? CrittersPlay.earnDisplayName(dog) : dog;
-    var title = apt ? apt.title : "";
-    var prize = apt && apt.prize ? apt.prize : "";
-    var tip = apt && apt.tip ? apt.tip : "Entertaining farm games — learn a little. Parents: see Services.";
-    var score = typeof opts.score === "number" ? opts.score : (state ? state.score : 0);
-    pendingEarnDog = dog;
 
-    if (earnAptitude) {
-      if (title) {
-        earnAptitude.hidden = false;
-        earnAptitude.textContent = "🏅 " + title;
-      } else {
-        earnAptitude.hidden = true;
-        earnAptitude.textContent = "";
-      }
-    }
-    if (earnTitle) {
-      earnTitle.textContent = title ? ("Awarded: " + title) : "Nice run!";
-    }
-    if (earnPrize) {
-      if (prize) {
-        earnPrize.hidden = false;
-        earnPrize.textContent = "🎁 " + prize;
-      } else {
-        earnPrize.hidden = true;
-        earnPrize.textContent = "";
-      }
-    }
-    if (earnBody) {
-      var body = name + (title ? (" — " + title + ".") : ".");
-      if (opts.unlocked) body += " Character unlocked.";
-      body += " " + tip;
-      if (opts.spinReady) body += " Optional: free Stead Spin (1 claim/day, honor-system).";
-      else if (opts.spinDeferred) body += " Spin claim used today — try again tomorrow.";
-      earnBody.textContent = body;
-    }
-    if (earnServices) {
-      earnServices.hidden = false;
-      earnServices.textContent = "See our services";
-      earnServices.href = CrittersPlay.SERVICES_URL || "https://www.sheehanhomestead.com/services";
-      earnServices.target = "_blank";
-      earnServices.rel = "noopener";
-    }
-    if (earnSms) {
-      earnSms.textContent = "Text HIGH SCORE to 914-263-1311";
-      earnSms.href = CrittersPlay.gameSmsHref
-        ? CrittersPlay.gameSmsHref(score, dog)
-        : CrittersPlay.smsHref(CrittersPlay.GAME_SMS_KEYWORD || "HIGH SCORE");
-    }
-    if (earnWheel) {
-      if (opts.spinReady && (dog === "gus" || dog === "betty")) {
-        earnWheel.hidden = false;
-        earnWheel.textContent = "🎡 Claim free Stead Spin";
-        earnWheel.href = CrittersPlay.wheelEarnUrl(dog);
-      } else {
-        earnWheel.hidden = true;
-      }
-    }
-    if (running && state && !state.over) {
-      pausedForEarn = true;
-      running = false;
-    } else {
-      pausedForEarn = false;
-    }
-    earnModal.classList.remove("hidden");
-    earnModal.setAttribute("aria-hidden", "false");
-  }
 
-  function showEarnModal(dogId) {
-    var dog = String(dogId || "").toLowerCase();
-    if (dog !== "gus" && dog !== "betty" && dog !== "sophie") return;
-    var spinReady = false;
-    var spinDeferred = false;
-    if ((dog === "gus" || dog === "betty") && window.CrittersPlay) {
-      var unclaimed = CrittersPlay.hasUnclaimedEarn && CrittersPlay.hasUnclaimedEarn(dog);
-      var canDay = !CrittersPlay.canClaimSpinToday || CrittersPlay.canClaimSpinToday();
-      spinReady = !!(unclaimed && canDay);
-      spinDeferred = !!(unclaimed && !canDay);
-    }
-    showWinModal({
-      dogId: dog,
-      unlocked: dog === "gus" || dog === "betty",
-      spinReady: spinReady,
-      spinDeferred: spinDeferred,
-      score: state ? state.score : 0
-    });
-  }
 
-  function hideEarnModal() {
-    if (!earnModal) return;
-    earnModal.classList.add("hidden");
-    earnModal.setAttribute("aria-hidden", "true");
-    var resume = pausedForEarn && state && !state.over;
-    pausedForEarn = false;
-    pendingEarnDog = null;
-    if (resume) {
-      running = true;
-      last = 0;
-      setMsg(currentGuard().name + " is back on watch");
-    }
-    updateClaimChip();
-    updateCapNote();
-  }
 
-  function updateClaimChip() {
-    if (!claimChip || !window.CrittersPlay) return;
-    var unclaimed = CrittersPlay.getClaimableEarnsToday
-      ? CrittersPlay.getClaimableEarnsToday()
-      : (CrittersPlay.getUnclaimedEarns ? CrittersPlay.getUnclaimedEarns() : []);
-    unclaimed = unclaimed.filter(function (e) { return e && (e.dog === "gus" || e.dog === "betty"); });
-    if (!unclaimed.length) {
-      claimChip.classList.add("hidden");
-      claimChip.innerHTML = "";
-      return;
-    }
-    claimChip.classList.remove("hidden");
-    claimChip.innerHTML = "";
-    unclaimed.forEach(function (rec) {
-      var dog = rec.dog;
-      var name = dog === "gus" ? "Gus" : "Betty";
-      var a = document.createElement("a");
-      a.className = "claim-chip-link";
-      a.href = CrittersPlay.wheelEarnUrl(dog);
-      a.textContent = "Stead Spin ready · " + name;
-      claimChip.appendChild(a);
-    });
-  }
 
-  function unlockIfNeeded(score) {
-    var newly = [];
-    GUARDS.forEach(function (g) {
-      if (score >= g.unlockAt && unlocked.indexOf(g.id) < 0) {
-        unlocked.push(g.id);
-        newly.push(g.id);
-        try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(unlocked)); } catch (e) {}
-      }
-    });
-    newly.forEach(function (id) {
-      if (id === "gus" || id === "betty") {
-        if (window.CrittersPlay && CrittersPlay.grantWheelSpin) {
-          CrittersPlay.grantWheelSpin(id);
-        }
-        if (window.CrittersPlay && CrittersPlay.grantAptitudeAward) {
-          CrittersPlay.grantAptitudeAward(id);
-        }
-        var apt = window.CrittersPlay && CrittersPlay.getAptitude ? CrittersPlay.getAptitude(id) : null;
-        var name = id === "gus" ? "Gus" : "Betty";
-        flashUnlockToast(name, apt ? apt.title : "");
-        showEarnModal(id);
-      }
-    });
-    renderPicker();
-    updateClaimChip();
-  }
+
+
+
+
 
   function loadDog() {
     var g = currentGuard();
@@ -293,16 +119,10 @@
       btn.disabled = !open;
       btn.innerHTML =
         '<div class="guard-thumb-wrap">' +
-        '<img src="' + g.img + '" alt="' + g.name + '" class="guard-thumb' + (open ? "" : " gray") + '" width="56" height="56" />' +
-        (open ? "" : '<span class="guard-lock">🔒</span>') +
+        '<img src="' + g.img + '" alt="' + g.name + '" class="guard-thumb" width="56" height="56" />' +
         "</div>" +
         '<p class="guard-name">' + g.name + "</p>" +
-        '<p class="guard-role">' + (open ? g.role : g.unlockAt + " pts") + "</p>" +
-        (open && window.CrittersPlay && CrittersPlay.hasAptitudeAward && CrittersPlay.hasAptitudeAward(g.id)
-          ? '<p class="guard-aptitude">🏅 ' + (CrittersPlay.getAptitude(g.id).title) + "</p>" : "") +
-        (open && window.CrittersPlay && CrittersPlay.hasUnclaimedEarn && CrittersPlay.hasUnclaimedEarn(g.id)
-          && (!CrittersPlay.canClaimSpinToday || CrittersPlay.canClaimSpinToday())
-          ? '<p class="guard-earn-chip">Spin ready</p>' : "");
+        '<p class="guard-role">' + g.role + "</p>";
       btn.addEventListener("click", function () {
         if (!open) return;
         selectedId = g.id;
@@ -468,7 +288,6 @@
       scoreEl.textContent = String(state.score);
       CrittersPlay.setBest(KEY, state.score);
       bestEl.textContent = String(CrittersPlay.getBest(KEY));
-      unlockIfNeeded(state.score);
       setMsg(hit > 1 ? "Pack scattered!" : "Chased off!");
     } else {
       setMsg("Woof! (get closer)");
@@ -493,17 +312,16 @@
     running = false;
     state.over = true;
     state.pointer = null;
-    var best = CrittersPlay.setBest(KEY, state.score);
-    bestEl.textContent = String(best);
-    unlockIfNeeded(state.score);
     var g = currentGuard();
-    var apt = window.CrittersPlay && CrittersPlay.getAptitude ? CrittersPlay.getAptitude(g.id) : null;
-    if (g.id === "sophie" && window.CrittersPlay && CrittersPlay.grantAptitudeAward) {
-      CrittersPlay.grantAptitudeAward("sophie");
-    }
+    var result = CrittersPlay.applyResult({
+      key: KEY,
+      score: state.score,
+      prior: runBest,
+      finished: true
+    });
+    bestEl.textContent = String(result.best);
     overlayTitle.textContent = "Shift over";
-    var awardLine = apt ? (" · 🏅 " + apt.title) : "";
-    overlayMsg.textContent = "Score " + state.score + " · Best " + best + awardLine + ". See our services · or text HIGH SCORE — or try again.";
+    overlayMsg.textContent = "Score " + state.score + " · Best " + result.best + ".";
     startBtn.textContent = "Guard again as " + g.name;
     overlay.classList.remove("hidden");
     if (pickerEl) pickerEl.style.display = "";
@@ -512,11 +330,6 @@
     if (hintEl) hintEl.style.visibility = "hidden";
     renderPicker();
     updateCapNote();
-    /* Sophie win path: aptitude + HIGH SCORE (no spin token) — once per session */
-    if (g.id === "sophie" && !sophieAwardShown && state.score > 0) {
-      sophieAwardShown = true;
-      setTimeout(function () { showEarnModal("sophie"); }, 350);
-    }
   }
 
   function toCanvas(e) {
@@ -588,7 +401,6 @@
           scoreEl.textContent = String(o.score);
           CrittersPlay.setBest(KEY, o.score);
           bestEl.textContent = String(CrittersPlay.getBest(KEY));
-          unlockIfNeeded(o.score);
         }
       }
       if (dist < 55) {
@@ -735,6 +547,8 @@
       updateCapNote();
       return;
     }
+    runBest = CrittersPlay.getBest(KEY);
+    if (CrittersPlay.clearWin) CrittersPlay.clearWin();
     resetState();
     overlay.classList.add("hidden");
     running = true;
@@ -794,32 +608,9 @@
   canvas.addEventListener("pointerup", function () { if (state) state.pointer = null; });
   canvas.addEventListener("pointercancel", function () { if (state) state.pointer = null; });
 
-  if (earnKeep) earnKeep.addEventListener("click", hideEarnModal);
-  if (earnModal) {
-    earnModal.addEventListener("click", function (e) {
-      if (e.target === earnModal) hideEarnModal();
-    });
-  }
-
-  /* Quiet QA hook: ?demoUnlock=gus|betty — not linked in UI */
-  try {
-    var demo = new URLSearchParams(location.search).get("demoUnlock");
-    if (demo) {
-      demo = String(demo).toLowerCase();
-      if ((demo === "gus" || demo === "betty") && unlocked.indexOf(demo) < 0) {
-        unlocked.push(demo);
-        try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(unlocked)); } catch (e2) {}
-      }
-      if (demo === "gus" || demo === "betty") {
-        if (window.CrittersPlay && CrittersPlay.grantWheelSpin) CrittersPlay.grantWheelSpin(demo, { fresh: true });
-        setTimeout(function () { showEarnModal(demo); }, 200);
-      }
-    }
-  } catch (eDemo) {}
 
   loadDog();
   renderPicker();
-  updateClaimChip();
   updateCapNote();
   resetState();
   if (controlsEl) controlsEl.style.display = "none";

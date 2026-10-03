@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#c9a227" />
+<meta name="theme-color" content="#243028" />
 <meta name="description" content="Barn Cat Defender — tuxedo cat vs mice and snakes. Critters on Call Play." />
 <title>Barn Cat Defender · Critters on Call Play</title>
 <link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
@@ -36,12 +36,18 @@
         <div class="hud-stat"><span class="hud-label">Lives</span><span class="hud-value tabular" id="lives">5</span></div>
         <div class="hud-stat"><span class="hud-label">Best</span><span class="hud-value tabular" id="best">0</span></div>
       </div>
+      <div class="play-prompts" aria-label="Learn and spin">
+        <p class="learn-prompt" id="learn-prompt">Muscovy ducks hiss more than they quack.</p>
+        <p class="spin-prompt"><a href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a></p>
+      </div>
       <div class="game-stage" id="stage">
         <canvas id="canvas" width="340" height="420" aria-label="Barn Cat Defender game"></canvas>
         <div class="game-overlay" id="overlay">
           <div class="overlay-badge" aria-hidden="true">🐈‍⬛</div>
           <h2 id="overlay-title">Barn Cat Defender</h2>
-          <p id="overlay-msg">Tuxedo barn cat vs mice &amp; snakes. Tap pests as they pop from the hay holes. Snakes are worth more.</p>
+          <p id="overlay-msg">Tuxedo barn cat vs mice and snakes. Tap pests as they pop from the hay holes. Snakes are worth more.</p>
+          <p class="win-line" id="win-line" hidden></p>
+          <a class="btn btn-outline btn-block" id="win-spin" href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/" hidden>Spin Stead Spin</a>
           <button type="button" class="btn btn-primary" id="start-btn">Start watch</button>
         </div>
       </div>

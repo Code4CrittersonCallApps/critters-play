@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#c9a227" />
+<meta name="theme-color" content="#243028" />
 <meta name="description" content="Pyrenees Guard — Sophie, Gus & Betty defend the red barn. Critters on Call Play." />
 <title>Pyrenees Guard · Critters on Call Play</title>
 <link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
@@ -37,11 +37,18 @@
       </div>
       <p class="game-msg" id="msg"></p>
       <p class="cap-note text-xs muted" id="cap-note" aria-live="polite"></p>
+      <div class="play-prompts" aria-label="Learn and spin">
+        <p class="learn-prompt" id="learn-prompt">Muscovy ducks hiss more than they quack.</p>
+        <p class="spin-prompt"><a href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a></p>
+      </div>
       <div class="game-stage" id="stage">
         <canvas id="canvas" width="340" height="440" aria-label="Pyrenees Guard game"></canvas>
         <div class="game-overlay" id="overlay">
           <h2 id="overlay-title">Pyrenees Guard</h2>
-          <p id="overlay-msg">Pick your guardian. Play as Sophie · unlock Gus at 250 · Betty at 500.</p>
+          <p id="overlay-msg">Pick your guardian — Sophie, Gus, or Betty. Drag to move. Bark to chase predators off the barn.</p>
+          <p class="win-line" id="win-line" hidden></p>
+          <a class="btn btn-outline btn-block" id="win-spin" href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/" hidden>Spin Stead Spin</a>
+          <p class="sms-line text-xs muted" id="sms-line" hidden>Text HIGH SCORE to 914-263-1311</p>
           <div class="guard-picker" id="picker"></div>
           <p class="guard-blurb text-xs muted" id="blurb"></p>
           <button type="button" class="btn btn-primary btn-block" id="start-btn">Start watch — Sophie</button>
@@ -55,25 +62,9 @@
         <button type="button" class="btn btn-ghost" id="nudge-d">↓</button>
         <button type="button" class="btn btn-ghost" id="nudge-c">Center</button>
       </div>
-      <p class="game-hint" id="hint" style="visibility:hidden">Drag Sophie · WASD · Space / Bark</p>
-      <div class="claim-chip-bar hidden" id="claim-chip" aria-live="polite"></div>
+      <p class="game-hint" id="hint" style="visibility:hidden">Drag to move · WASD · Space / Bark</p>
     </div>
   </main>
-</div>
-<div class="earn-modal hidden" id="earn-modal" aria-hidden="true" role="dialog" aria-labelledby="earn-title">
-  <div class="earn-modal-card">
-    <p class="earn-modal-emoji" aria-hidden="true">🏅</p>
-    <p class="aptitude-badge" id="earn-aptitude" hidden></p>
-    <h2 id="earn-title">You earned an award</h2>
-    <p class="prize-line" id="earn-prize" hidden></p>
-    <p id="earn-body" class="earn-modal-body">Entertaining farm games — learn a little. Parents: see our services on the real website.</p>
-    <div class="earn-modal-actions">
-      <a class="btn btn-primary btn-block" id="earn-services" href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener">See our services</a>
-      <a class="btn btn-outline btn-block" id="earn-sms" href="sms:9142631311?&body=HIGH%20SCORE">Text HIGH SCORE to 914-263-1311</a>
-      <a class="btn btn-outline btn-block" id="earn-wheel" href="https://Code4CrittersonCallApps.github.io/critters-on-call/wheel.html" rel="noopener" hidden>🎡 Claim free spin</a>
-      <button type="button" class="btn btn-ghost btn-block" id="earn-keep">Keep playing</button>
-    </div>
-  </div>
 </div>
 <script src="js/scores.js"></script>
 <script src="js/earn-spin.js"></script>

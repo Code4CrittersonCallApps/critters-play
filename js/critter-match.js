@@ -44,6 +44,7 @@
   var misses = 0;
 
   bestEl.textContent = CrittersPlay.getBest(KEY);
+  var runBest = CrittersPlay.getBest(KEY);
 
   function shuffle(arr) {
     var a = arr.slice();
@@ -114,10 +115,15 @@
           var allDone = round.every(function (r) { return matched[r.id]; });
           if (allDone) {
             phase = "done";
-            CrittersPlay.setBest(KEY, score);
-            bestEl.textContent = String(CrittersPlay.getBest(KEY));
+            var result = CrittersPlay.applyResult({
+              key: KEY,
+              score: score,
+              prior: runBest,
+              finished: true
+            });
+            bestEl.textContent = String(result.best);
             overlayTitle.textContent = "You know the crew!";
-            overlayMsg.textContent = "Score " + score + " · Best " + CrittersPlay.getBest(KEY) + " — Sophie would be proud.";
+            overlayMsg.textContent = "Score " + score + " · Best " + result.best + ".";
             startBtn.textContent = "Match again";
             overlay.classList.remove("hidden");
             playArea.classList.add("hidden");
@@ -143,6 +149,8 @@
   }
 
   function start() {
+    runBest = CrittersPlay.getBest(KEY);
+    if (CrittersPlay.clearWin) CrittersPlay.clearWin();
     var shuffled = shuffle(ROSTER);
     var sophie = shuffled.find(function (c) { return c.id === "sophie"; });
     var rest = shuffled.filter(function (c) { return c.id !== "sophie"; });

@@ -46,150 +46,15 @@
 
   bestEl.textContent = CrittersPlay.getBest(KEY);
 
-  var EARN_SCORE = 300;
-  var EARN_ID = "elon";
-  var earnModal = document.getElementById("earn-modal");
-  var earnTitle = document.getElementById("earn-title");
-  var earnBody = document.getElementById("earn-body");
-  var earnWheel = document.getElementById("earn-wheel");
-  var earnSms = document.getElementById("earn-sms");
-  var earnKeep = document.getElementById("earn-keep");
-  var earnAptitude = document.getElementById("earn-aptitude");
-  var earnPrize = document.getElementById("earn-prize");
-  var earnServices = document.getElementById("earn-services");
-  var claimChip = document.getElementById("claim-chip");
-  var capNote = document.getElementById("cap-note");
-  var earnShownThisRun = false;
-  var pausedForEarn = false;
+  var runBest = CrittersPlay.getBest(KEY);
 
+  var capNote = document.getElementById("cap-note");
   function updateCapNote() {
     if (!capNote || !window.CrittersPlay || !CrittersPlay.playsRemainingToday) return;
-    var left = CrittersPlay.playsRemainingToday(EARN_ID);
+    var left = CrittersPlay.playsRemainingToday("elon");
     capNote.textContent = "Evade Elon: " + left + " play" + (left === 1 ? "" : "s") + " left today (max " + CrittersPlay.PLAYS_PER_CHAR_PER_DAY + "/day)";
   }
 
-  function updateClaimChip() {
-    if (!claimChip || !window.CrittersPlay) return;
-    var unclaimed = CrittersPlay.getClaimableEarnsToday
-      ? CrittersPlay.getClaimableEarnsToday()
-      : (CrittersPlay.getUnclaimedEarns ? CrittersPlay.getUnclaimedEarns() : []);
-    var mine = unclaimed.filter(function (e) { return e && e.dog === EARN_ID; });
-    if (!mine.length) {
-      claimChip.classList.add("hidden");
-      claimChip.innerHTML = "";
-      return;
-    }
-    claimChip.classList.remove("hidden");
-    claimChip.innerHTML = "";
-    var a = document.createElement("a");
-    a.className = "claim-chip-link";
-    a.href = CrittersPlay.wheelEarnUrl(EARN_ID);
-    a.textContent = "Stead Spin ready · Evade Elon";
-    claimChip.appendChild(a);
-  }
-
-  function showEarnModal() {
-    if (!earnModal || !window.CrittersPlay) return;
-    var apt = CrittersPlay.getAptitude ? CrittersPlay.getAptitude(EARN_ID) : null;
-    if (CrittersPlay.grantAptitudeAward) CrittersPlay.grantAptitudeAward(EARN_ID);
-    var score = state ? state.score : EARN_SCORE;
-    var unclaimed = CrittersPlay.hasUnclaimedEarn && CrittersPlay.hasUnclaimedEarn(EARN_ID);
-    var canDay = !CrittersPlay.canClaimSpinToday || CrittersPlay.canClaimSpinToday();
-    var spinReady = !!(unclaimed && canDay);
-    var prize = apt && apt.prize ? apt.prize : "Grain Guard STEM spark";
-    var tip = apt && apt.tip ? apt.tip : "Learning & STEM-on-farm flavor — explore on Services.";
-
-    if (earnAptitude) {
-      earnAptitude.hidden = false;
-      earnAptitude.textContent = "🏅 " + (apt ? apt.title : "Grain Guard");
-    }
-    if (earnTitle) earnTitle.textContent = "Awarded: " + (apt ? apt.title : "Grain Guard");
-    if (earnPrize) {
-      earnPrize.hidden = false;
-      earnPrize.textContent = "🎁 " + prize;
-    }
-    if (earnBody) {
-      var body = "Hit " + EARN_SCORE + " on Evade Elon. " + tip;
-      if (spinReady) body += " Optional: Stead Spin (honor-system). Text HIGH SCORE + a screenshot.";
-      else if (unclaimed && !canDay) body += " Spin claim used today — try again tomorrow.";
-      earnBody.textContent = body;
-    }
-    if (earnServices) {
-      earnServices.hidden = false;
-      earnServices.textContent = "See our services";
-      earnServices.href = CrittersPlay.SERVICES_URL || "https://www.sheehanhomestead.com/services";
-      earnServices.target = "_blank";
-      earnServices.rel = "noopener";
-    }
-    if (earnSms) {
-      earnSms.textContent = "Text HIGH SCORE + screenshot to 914-263-1311";
-      earnSms.href = CrittersPlay.gameSmsHref
-        ? CrittersPlay.gameSmsHref(score, EARN_ID)
-        : CrittersPlay.smsHref(CrittersPlay.GAME_SMS_KEYWORD || "HIGH SCORE");
-    }
-    if (earnWheel) {
-      if (spinReady) {
-        earnWheel.hidden = false;
-        earnWheel.textContent = "🎡 Claim Stead Spin";
-        earnWheel.href = CrittersPlay.wheelEarnUrl(EARN_ID);
-      } else {
-        earnWheel.hidden = true;
-      }
-    }
-    if (running && state && !state.over) {
-      pausedForEarn = true;
-      running = false;
-    } else {
-      pausedForEarn = false;
-    }
-    earnModal.classList.remove("hidden");
-    earnModal.setAttribute("aria-hidden", "false");
-  }
-
-  function hideEarnModal() {
-    if (!earnModal) return;
-    earnModal.classList.add("hidden");
-    earnModal.setAttribute("aria-hidden", "true");
-    var resume = pausedForEarn && state && !state.over;
-    pausedForEarn = false;
-    if (resume) {
-      running = true;
-      last = 0;
-    }
-    updateClaimChip();
-    updateCapNote();
-  }
-
-  function maybeGrantEarn(score) {
-    if (!window.CrittersPlay || !CrittersPlay.grantWheelSpin) return;
-    if (score < EARN_SCORE) return;
-    if (CrittersPlay.hasUnclaimedEarn && CrittersPlay.hasUnclaimedEarn(EARN_ID)) {
-      if (!earnShownThisRun) {
-        earnShownThisRun = true;
-        showEarnModal();
-      }
-      updateClaimChip();
-      return;
-    }
-    var existing = CrittersPlay.getEarnForDog ? CrittersPlay.getEarnForDog(EARN_ID) : null;
-    if (existing && existing.claimed) {
-      /* already claimed this earn token — still show aptitude + HIGH SCORE once per run */
-      if (!earnShownThisRun && CrittersPlay.hasAptitudeAward && !CrittersPlay.hasAptitudeAward(EARN_ID)) {
-        earnShownThisRun = true;
-        if (CrittersPlay.grantAptitudeAward) CrittersPlay.grantAptitudeAward(EARN_ID);
-        showEarnModal();
-      }
-      updateClaimChip();
-      return;
-    }
-    CrittersPlay.grantWheelSpin(EARN_ID);
-    if (CrittersPlay.grantAptitudeAward) CrittersPlay.grantAptitudeAward(EARN_ID);
-    if (!earnShownThisRun) {
-      earnShownThisRun = true;
-      showEarnModal();
-    }
-    updateClaimChip();
-  }
 
   function freshCrew() {
     return CREW.map(function (c) {
@@ -342,7 +207,6 @@
         if (fedEl) fedEl.textContent = fedCount + "/" + CREW.length;
         CrittersPlay.setBest(KEY, t.score);
         bestEl.textContent = String(CrittersPlay.getBest(KEY));
-        maybeGrantEarn(t.score);
         if (Math.random() < 0.28) {
           t.msg = "✨ " + ANIMAL_FACTS[Math.floor(Math.random() * ANIMAL_FACTS.length)];
           t.msgT = 2.2;
@@ -360,8 +224,7 @@
           if (fedEl) fedEl.textContent = "0/" + CREW.length;
           CrittersPlay.setBest(KEY, t.score);
           bestEl.textContent = String(CrittersPlay.getBest(KEY));
-          maybeGrantEarn(t.score);
-          t.msg = "Wave " + t.wave + " — Elon is hungrier!";
+            t.msg = "Wave " + t.wave + " — Elon is hungrier!";
           t.msgT = 1.6;
         }
         return;
@@ -381,10 +244,15 @@
     running = false;
     state.over = true;
     state.pointer = null;
-    var best = CrittersPlay.setBest(KEY, state.score);
-    bestEl.textContent = String(best);
+    var result = CrittersPlay.applyResult({
+      key: KEY,
+      score: state.score,
+      prior: runBest,
+      finished: true
+    });
+    bestEl.textContent = String(result.best);
     overlayTitle.textContent = "Elon ate the shift";
-    overlayMsg.textContent = "Score " + state.score + " · Best " + best + ". See our services · or text HIGH SCORE + screenshot — or refill and try again.";
+    overlayMsg.textContent = "Score " + state.score + " · Best " + result.best + ".";
     startBtn.textContent = "Dodge again";
     overlay.classList.remove("hidden");
     if (hintEl) hintEl.style.visibility = "hidden";
@@ -511,17 +379,18 @@
   }
 
   function start() {
-    if (window.CrittersPlay && CrittersPlay.canStartPlay && !CrittersPlay.canStartPlay(EARN_ID)) {
+    if (window.CrittersPlay && CrittersPlay.canStartPlay && !CrittersPlay.canStartPlay("elon")) {
       if (overlayMsg) overlayMsg.textContent = "Daily play cap reached for Evade Elon (" + CrittersPlay.PLAYS_PER_CHAR_PER_DAY + "/day). Come back tomorrow.";
       updateCapNote();
       return;
     }
-    if (window.CrittersPlay && CrittersPlay.consumePlay && !CrittersPlay.consumePlay(EARN_ID)) {
+    if (window.CrittersPlay && CrittersPlay.consumePlay && !CrittersPlay.consumePlay("elon")) {
       updateCapNote();
       return;
     }
     resetState();
-    earnShownThisRun = false;
+    runBest = CrittersPlay.getBest(KEY);
+    if (CrittersPlay.clearWin) CrittersPlay.clearWin();
     overlay.classList.add("hidden");
     running = true;
     last = 0;
@@ -559,15 +428,7 @@
   canvas.addEventListener("pointerup", function () { if (state) state.pointer = null; });
   canvas.addEventListener("pointercancel", function () { if (state) state.pointer = null; });
 
-  if (earnKeep) earnKeep.addEventListener("click", hideEarnModal);
-  if (earnModal) {
-    earnModal.addEventListener("click", function (e) {
-      if (e.target === earnModal) hideEarnModal();
-    });
-  }
-
   resetState();
-  updateClaimChip();
   updateCapNote();
   draw();
   requestAnimationFrame(loop);

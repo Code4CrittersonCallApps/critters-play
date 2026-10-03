@@ -24,6 +24,7 @@
   var last = 0;
 
   bestEl.textContent = CrittersPlay.getBest(KEY);
+  var runBest = CrittersPlay.getBest(KEY);
 
   function makeHoles() {
     var holes = [];
@@ -217,10 +218,15 @@
   function endGame() {
     running = false;
     state.over = true;
-    var best = CrittersPlay.setBest(KEY, state.score);
-    bestEl.textContent = String(best);
+    var result = CrittersPlay.applyResult({
+      key: KEY,
+      score: state.score,
+      prior: runBest,
+      finished: true
+    });
+    bestEl.textContent = String(result.best);
     overlayTitle.textContent = "Barn quiet";
-    overlayMsg.textContent = "Score " + state.score + " · Best " + best + ". The tuxedo cat stretches and naps.";
+    overlayMsg.textContent = "Score " + state.score + " · Best " + result.best + ". The tuxedo cat stretches and naps.";
     startBtn.textContent = "Hunt again";
     overlay.classList.remove("hidden");
     if (hintEl) hintEl.style.visibility = "hidden";
@@ -370,6 +376,8 @@
   }
 
   function start() {
+    runBest = CrittersPlay.getBest(KEY);
+    if (CrittersPlay.clearWin) CrittersPlay.clearWin();
     resetState();
     overlay.classList.add("hidden");
     running = true;
