@@ -72,6 +72,8 @@
     return Object.keys(readUnlocked()).length > 0;
   }
 
+  var pageEarned = false;
+
   function paintGates() {
     var ready = spinReady();
     var locked = document.getElementById("spin-gate-locked");
@@ -79,21 +81,19 @@
     if (locked) locked.hidden = ready;
     if (open) open.hidden = !ready;
 
-    document.querySelectorAll("a.spin-gate").forEach(function (a) {
-      if (ready) {
-        if (!a.getAttribute("href")) a.setAttribute("href", SPIN_URL);
-        a.textContent = a.getAttribute("data-label") || "Spin Stead Spin";
-        a.style.pointerEvents = "";
-        a.style.textDecoration = "";
-        a.removeAttribute("aria-disabled");
-      } else {
-        a.removeAttribute("href");
-        a.textContent = "Play a game to spin.";
-        a.style.pointerEvents = "none";
-        a.style.textDecoration = "none";
-        a.setAttribute("aria-disabled", "true");
-      }
-    });
+    var prompt = document.getElementById("spin-prompt");
+    if (!prompt) return;
+    if (!pageEarned) {
+      prompt.hidden = true;
+      prompt.textContent = "";
+      return;
+    }
+    prompt.hidden = false;
+    prompt.innerHTML = "";
+    var a = document.createElement("a");
+    a.href = SPIN_URL;
+    a.textContent = "Spin";
+    prompt.appendChild(a);
   }
 
   function clearWin() {
@@ -116,6 +116,7 @@
     var best = opts.key ? setBest(opts.key, score) : Math.max(prior, score);
     var spinAt = typeof opts.spinAt === "number" ? opts.spinAt : null;
     var earned = true;
+    pageEarned = true;
     markUnlocked(opts.game || opts.key || "play");
 
     var line = document.getElementById("win-line");
@@ -123,7 +124,7 @@
     var sms = document.getElementById("sms-line");
     if (line) {
       line.hidden = spinAt === null;
-      line.textContent = "You played. Stead Spin is open.";
+      line.textContent = "You played. Spin is open.";
     }
     if (spin) spin.hidden = !earned;
     if (sms) sms.hidden = !earned;
@@ -133,8 +134,6 @@
 
   /* Games call this with their own SPIN_AT so a saved best can open the hub link. */
   function noteSpin(id, best, spinAt) {
-    var target = document.getElementById("spin-target");
-    if (target) target.textContent = "Finish a game to spin.";
     paintGates();
   }
 
