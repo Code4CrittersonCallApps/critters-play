@@ -68,32 +68,50 @@
     }
   }
 
+  /* A saved unlock never opens the wheel. Only this page's run can. */
   function spinReady() {
-    return Object.keys(readUnlocked()).length > 0;
+    return false;
   }
 
-  var pageEarned = false;
+  function hideSpin(spin) {
+    if (!spin) return;
+    spin.removeAttribute("href");
+    spin.hidden = true;
+    spin.style.display = "none";
+  }
 
-  function paintGates() {
-    var ready = spinReady();
-    var locked = document.getElementById("spin-gate-locked");
-    var open = document.getElementById("spin-gate-ready");
-    if (locked) locked.hidden = ready;
-    if (open) open.hidden = !ready;
+  function showSpin(spin) {
+    if (!spin) return;
+    spin.href = SPIN_URL;
+    spin.hidden = false;
+    spin.style.display = "";
+  }
 
+  /* Drop every giving-wheel link that is not the post-win control. */
+  function stripEarlyLinks() {
+    var links = document.querySelectorAll("a[href*='giving-wheel']");
+    for (var i = 0; i < links.length; i++) {
+      if (links[i].id === "win-spin") continue;
+      links[i].removeAttribute("href");
+      links[i].hidden = true;
+      var parent = links[i].parentElement;
+      if (parent && parent.id === "spin-gate-ready") parent.hidden = true;
+    }
+    hideSpin(document.getElementById("win-spin"));
     var prompt = document.getElementById("spin-prompt");
-    if (!prompt) return;
-    if (!pageEarned) {
+    if (prompt) {
       prompt.hidden = true;
       prompt.textContent = "";
-      return;
     }
-    prompt.hidden = false;
-    prompt.innerHTML = "";
-    var a = document.createElement("a");
-    a.href = SPIN_URL;
-    a.textContent = "Spin";
-    prompt.appendChild(a);
+    var open = document.getElementById("spin-gate-ready");
+    if (open) {
+      open.hidden = true;
+      open.textContent = "";
+    }
+  }
+
+  function paintGates() {
+    stripEarlyLinks();
   }
 
   function clearWin() {
@@ -101,38 +119,44 @@
     var spin = document.getElementById("win-spin");
     var sms = document.getElementById("sms-line");
     if (line) { line.hidden = true; line.textContent = ""; }
-    if (spin) spin.hidden = true;
+    hideSpin(spin);
     if (sms) sms.hidden = true;
     var learnEl = document.getElementById("learn-prompt");
     if (learnEl) learnEl.textContent = learnFact();
     paintGates();
   }
 
-  /* Spin link shows only when this score meets the game's SPIN_AT. */
+  /* Spin link shows only when THIS run meets the game's SPIN_AT.
+     A saved best, or a finished game under the score, does not unlock it. */
   function applyResult(opts) {
     opts = opts || {};
     var score = opts.score || 0;
     var prior = typeof opts.prior === "number" ? opts.prior : getBest(opts.key);
     var best = opts.key ? setBest(opts.key, score) : Math.max(prior, score);
     var spinAt = typeof opts.spinAt === "number" ? opts.spinAt : null;
-    var earned = true;
-    pageEarned = true;
-    markUnlocked(opts.game || opts.key || "play");
+    var earned = spinAt !== null && score >= spinAt;
+    if (earned) markUnlocked(opts.game || opts.key || "play");
 
     var line = document.getElementById("win-line");
     var spin = document.getElementById("win-spin");
     var sms = document.getElementById("sms-line");
     if (line) {
       line.hidden = spinAt === null;
-      line.textContent = "You played. Spin is open.";
+      if (earned) line.textContent = "Score " + score + ". Stead Spin is open.";
+      else if (spinAt !== null) line.textContent = "Score " + score + ". Need " + spinAt + " to spin.";
     }
-    if (spin) spin.hidden = !earned;
+    if (earned) showSpin(spin);
+    else hideSpin(spin);
     if (sms) sms.hidden = !earned;
-    paintGates();
+    var prompt = document.getElementById("spin-prompt");
+    if (prompt) {
+      prompt.hidden = true;
+      prompt.textContent = "";
+    }
     return { beat: score > prior && score > 0, earned: earned, best: best, spinAt: spinAt };
   }
 
-  /* Games call this with their own SPIN_AT so a saved best can open the hub link. */
+  /* Saved best must not open a spin on a game that has not just been won. */
   function noteSpin(id, best, spinAt) {
     paintGates();
   }

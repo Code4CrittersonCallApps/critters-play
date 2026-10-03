@@ -15,7 +15,7 @@ python3 -m http.server 8771
 ```
 
 ## Win
-Stead Spin opens only after a score threshold in any game. The number is `SPIN_AT` in that game's JS:
+Stead Spin opens only on that game, after that run meets its score. A saved best does not open it, and the hub has no wheel link. The number is `SPIN_AT` in that game's JS:
 
 - Pyrenees Guard: 400
 - Evade Elon: 600

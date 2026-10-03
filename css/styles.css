@@ -688,6 +688,10 @@ p { margin: 0; }
 }
 .spin-prompt { margin: 0; font-size: 0.9rem; font-weight: 600; }
 .spin-prompt a { color: #d7e6db; text-decoration: underline; text-underline-offset: 0.15em; }
+#win-spin[hidden],
+.spin-prompt[hidden],
+.spin-gate-ready[hidden],
+.win-line[hidden] { display: none !important; }
 .win-line {
   margin: 0.2rem 0 0.35rem;
   font-weight: 650;
