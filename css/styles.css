@@ -1,9 +1,9 @@
 /* Critters on Call — Play hub */
 :root {
-  --gold: #c9a227;
-  --gold-hover: #b89120;
-  --gold-soft: rgba(201, 162, 39, 0.15);
-  --gold-ring: rgba(201, 162, 39, 0.4);
+  --gold: #6f9a7a;
+  --gold-hover: #5d8468;
+  --gold-soft: rgba(111, 154, 122, 0.16);
+  --gold-ring: rgba(111, 154, 122, 0.45);
   --ink: #0f0e0c;
   --bg: #14120f;
   --surface: #1c1a16;
@@ -13,7 +13,7 @@
   --muted: #a89f8c;
   --subtle: #6e675a;
   --accent: #e8d48c;
-  --primary-fg: #1a1508;
+  --primary-fg: #f7f4ee;
   --danger: #c45c4a;
   --success: #6a9e6a;
   --radius: 1rem;
@@ -77,7 +77,7 @@ p { margin: 0; }
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
-  border: 1px solid rgba(201, 162, 39, 0.5);
+  border: 1px solid rgba(111, 154, 122, 0.45);
   object-fit: cover;
   flex-shrink: 0;
   background: var(--surface-2);
