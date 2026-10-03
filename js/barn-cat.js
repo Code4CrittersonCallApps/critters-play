@@ -1,6 +1,9 @@
 /* Barn Cat Defender — tuxedo cat vs mice & snakes in hay holes (Build-matched) */
 (function () {
   var KEY = "coc-play-barn-cat-best";
+  /* Stead Spin unlock: 300 in one watch.
+     A mouse is about 50; a snake is about 150. */
+  var SPIN_AT = 300;
   var W = 340, H = 420, COLS = 3, ROWS = 3;
 
   var canvas = document.getElementById("canvas");
@@ -25,6 +28,7 @@
 
   bestEl.textContent = CrittersPlay.getBest(KEY);
   var runBest = CrittersPlay.getBest(KEY);
+  if (CrittersPlay.noteSpin) CrittersPlay.noteSpin("barn-cat", runBest, SPIN_AT);
 
   function makeHoles() {
     var holes = [];
@@ -220,9 +224,10 @@
     state.over = true;
     var result = CrittersPlay.applyResult({
       key: KEY,
+      game: "barn-cat",
       score: state.score,
       prior: runBest,
-      finished: true
+      spinAt: SPIN_AT
     });
     bestEl.textContent = String(result.best);
     overlayTitle.textContent = "Barn quiet";

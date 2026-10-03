@@ -13,18 +13,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/styles.css" />
-<style>
-  .play-path {
-    border-radius: 0.85rem;
-    border: 1px solid rgba(111,154,122,0.4);
-    background: rgba(111,154,122,0.1);
-    padding: 0.85rem 0.9rem;
-  }
-  .play-path h2 { font-size: 1rem; margin: 0 0 0.35rem; color: #d7e6db; }
-  .play-path ol { margin: 0.35rem 0 0.65rem; padding-left: 1.2rem; font-size: 0.8rem; line-height: 1.45; color: var(--muted, #a39a88); }
-  .play-path ol strong { color: var(--fg, #f5f0e6); }
-  .play-path-actions { display: flex; flex-direction: column; gap: 0.4rem; }
-</style>
 </head>
 <body>
 <div class="app">
@@ -42,38 +30,27 @@
 
   <main class="main">
     <div class="stack">
-      <section class="hero" aria-label="Play hub">
-        <img src="assets/hero.jpg" alt="Sheehan Homestead critters" width="640" height="360" />
-        <div class="hero-fade" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <span class="pill">Play hub</span>
-          <h1 style="font-size:1.5rem">Critters on Call Play</h1>
-          <p class="text-sm muted" style="max-width:20rem">Wholesome farm games. Learn a short fact, beat your high score, then spin.</p>
-        </div>
+      <section class="hero card-hero" aria-label="Gold membership">
+        <img src="assets/gold-card.jpg" alt="Critters on Call Gold membership card. In Critters We Trust. Sheehan Homestead." width="1200" height="760" />
       </section>
 
+      <!-- Weekly email claim and the bigger wheel are not built yet. -->
       <section class="play-path" aria-label="How to play and win">
-        <h2>How to play &amp; win</h2>
+        <h2>How to play and win</h2>
         <ol>
-          <li>Pick a game.</li>
-          <li>Read the short farm fact.</li>
-          <li>Beat your high score, or finish the round. Then <strong>spin</strong>.</li>
+          <li>Pick a game below.</li>
+          <li>Read the short farm fact on that game.</li>
+          <li>Beat <strong>that game's score</strong>. Any one game is enough.</li>
+          <li>Then open <strong>Stead Spin</strong>. A lower score keeps the spin closed.</li>
         </ol>
-        <div class="play-prompts" aria-label="Learn and spin">
-          <p class="learn-prompt" id="learn-prompt">Muscovy ducks hiss more than they quack.</p>
-          <p class="spin-prompt"><a href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a></p>
-        </div>
-        <p class="text-xs muted" style="margin:0.55rem 0 0.55rem">Text HIGH SCORE to 914-263-1311</p>
-        <div class="play-path-actions">
-          <a class="btn btn-primary btn-block" href="pyrenees-guard.html">Play Pyrenees Guard</a>
-          <a class="btn btn-outline btn-block" href="evade-elon.html">Play Evade Elon</a>
-          <a class="btn btn-outline btn-block" href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a>
-        </div>
+        <p class="learn-prompt" id="learn-prompt">Muscovy ducks hiss more than they quack.</p>
+        <p class="spin-gate-locked" id="spin-gate-locked">Need a higher score to spin.</p>
+        <p class="spin-gate-ready" id="spin-gate-ready" hidden><a href="https://Code4CrittersonCallApps.github.io/critters-on-call/giving-wheel/">Spin Stead Spin</a></p>
       </section>
 
       <section class="stack-sm">
         <div>
-          <h2 style="font-size:1.125rem">Choose a game</h2>
+          <h2 class="choose-title">Choose a game</h2>
         </div>
         <div class="door-grid">
           <a class="door" href="pyrenees-guard.html">
@@ -101,9 +78,9 @@
             <svg class="door-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </a>
           <a class="door" href="ducks-to-bed.html">
-            <span class="door-emoji" aria-hidden="true">🦆</span>
+            <span class="door-emoji door-fowl" aria-hidden="true"><span>🦆</span><span>🪿</span><span>🐤</span></span>
             <span class="door-body">
-              <span class="door-title">Ducks to Bed</span>
+              <span class="door-title">Fowl to Bed</span>
               <span class="door-desc">Coax the evening train into the barn, then toss treats to the three who sleep outside.</span>
             </span>
             <svg class="door-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>

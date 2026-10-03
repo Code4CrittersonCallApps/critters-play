@@ -1,6 +1,10 @@
 /* Critter Match — tap critter, then matching name & fact (Build-matched) */
 (function () {
   var KEY = "coc-play-critter-match-best";
+  /* Stead Spin unlock: 1000 on a finished board.
+     Each match is 100, plus 25 for each step of a streak.
+     Eight cold matches are 800; 1000 needs a real streak. */
+  var SPIN_AT = 1000;
   var ROSTER = [
     { id: "sophie", emoji: "🐕", name: "Sophie", breed: "Great Pyrenees", description: "Livestock guardian dog. White fluffy protector — the real farmer's dog & brand face.", image: "assets/sophie.png" },
     { id: "gus", emoji: "🐕", name: "Gus", breed: "Pyrenees mix", description: "Black-and-tan guardian. Night scout — faster on his feet than he looks.", image: "assets/gus.png" },
@@ -45,6 +49,7 @@
 
   bestEl.textContent = CrittersPlay.getBest(KEY);
   var runBest = CrittersPlay.getBest(KEY);
+  if (CrittersPlay.noteSpin) CrittersPlay.noteSpin("critter-match", runBest, SPIN_AT);
 
   function shuffle(arr) {
     var a = arr.slice();
@@ -117,9 +122,10 @@
             phase = "done";
             var result = CrittersPlay.applyResult({
               key: KEY,
+              game: "critter-match",
               score: score,
               prior: runBest,
-              finished: true
+              spinAt: SPIN_AT
             });
             bestEl.textContent = String(result.best);
             overlayTitle.textContent = "You know the crew!";

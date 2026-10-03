@@ -1,6 +1,10 @@
 /* Evade Elon — feed the crew, dodge Elon Muscovy (Build-matched) */
 (function () {
   var KEY = "coc-play-evade-elon-best";
+  /* Stead Spin unlock: 600 in one run.
+     Each feeding is about 100–120; clearing a wave adds 250.
+     600 is several animals fed, not a single scoop. */
+  var SPIN_AT = 600;
   var W = 340, H = 440;
   var CREW = [
     { id: "kneepads", emoji: "🐐", name: "Kneepads", x: 58, y: 118 },
@@ -47,6 +51,7 @@
   bestEl.textContent = CrittersPlay.getBest(KEY);
 
   var runBest = CrittersPlay.getBest(KEY);
+  if (CrittersPlay.noteSpin) CrittersPlay.noteSpin("evade-elon", runBest, SPIN_AT);
 
   var capNote = document.getElementById("cap-note");
   function updateCapNote() {
@@ -246,9 +251,10 @@
     state.pointer = null;
     var result = CrittersPlay.applyResult({
       key: KEY,
+      game: "evade-elon",
       score: state.score,
       prior: runBest,
-      finished: true
+      spinAt: SPIN_AT
     });
     bestEl.textContent = String(result.best);
     overlayTitle.textContent = "Elon ate the shift";

@@ -1,6 +1,10 @@
 /* Ducks to Bed — coax the train in, then toss treats outside */
 (function () {
   var KEY = "coc-play-ducks-to-bed-best";
+  /* Stead Spin unlock: 13 in one bedtime.
+     1 point for each of 10 birds bedded, plus 1 per treat that lands.
+     13 means the barn is full and Elon, Emilio, and Halle Berry each got a treat. */
+  var SPIN_AT = 13;
   var FACT = "The ducks live with the chickens, and they lay eggs on the ground instead of in the nesting boxes the way the chickens do.";
   var TREAT_BUDGET = 8;
 
@@ -18,9 +22,9 @@
   ];
 
   var SLEEPER_DEFS = [
-    { id: "elon", name: "Elon", breed: "Muscovy", sprite: "muscovy", x: 0.22, dir: 1, speed: 0.16 },
+    { id: "elon", name: "Elon", breed: "Muscovy duck", sprite: "muscovy", x: 0.22, dir: 1, speed: 0.16 },
     { id: "emilio", name: "Emilio", breed: "Canada goose", sprite: "canada", x: 0.52, dir: -1, speed: 0.11 },
-    { id: "halle", name: "Halle Berry", breed: "Muscovy", sprite: "muscovy small", x: 0.8, dir: 1, speed: 0.2 }
+    { id: "halle", name: "Halle Berry", breed: "Smaller female Muscovy", sprite: "muscovy small", x: 0.8, dir: 1, speed: 0.2 }
   ];
 
   var scoreEl = document.getElementById("score");
@@ -55,6 +59,7 @@
   var runBest = 0;
 
   bestEl.textContent = String(CrittersPlay.getBest(KEY));
+  if (CrittersPlay.noteSpin) CrittersPlay.noteSpin("fowl-to-bed", CrittersPlay.getBest(KEY), SPIN_AT);
 
   function pinFact() {
     var el = document.getElementById("learn-prompt");
@@ -229,9 +234,10 @@
     cancelAnimationFrame(raf);
     var result = CrittersPlay.applyResult({
       key: KEY,
+      game: "fowl-to-bed",
       score: score,
       prior: runBest,
-      finished: !!done && score > 0
+      spinAt: SPIN_AT
     });
     pinFact();
     bestEl.textContent = String(result.best);

@@ -1,6 +1,9 @@
 /* Pyrenees Guard — Sophie/Gus/Betty defend the red barn (Build-matched) */
 (function () {
   var KEY = "coc-play-pyrenees-guard-best";
+  /* Stead Spin unlock: 400 in one watch.
+     Fox 100, raccoon 80, hawk 140, coyote 200, plus a little per wave. */
+  var SPIN_AT = 400;
   var UNLOCK_KEY = "coc-play-pyrenees-unlocked";
   var SELECT_KEY = "coc-play-pyrenees-selected";
   var W = 340, H = 440;
@@ -66,6 +69,7 @@
 
   bestEl.textContent = CrittersPlay.getBest(KEY);
   var runBest = CrittersPlay.getBest(KEY);
+  if (CrittersPlay.noteSpin) CrittersPlay.noteSpin("pyrenees-guard", runBest, SPIN_AT);
 
   function currentGuard() {
     return GUARDS.find(function (g) { return g.id === selectedId; }) || GUARDS[0];
@@ -315,9 +319,10 @@
     var g = currentGuard();
     var result = CrittersPlay.applyResult({
       key: KEY,
+      game: "pyrenees-guard",
       score: state.score,
       prior: runBest,
-      finished: true
+      spinAt: SPIN_AT
     });
     bestEl.textContent = String(result.best);
     overlayTitle.textContent = "Shift over";
