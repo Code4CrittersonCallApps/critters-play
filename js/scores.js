@@ -69,14 +69,7 @@
   }
 
   function spinReady() {
-    if (Object.keys(readUnlocked()).length > 0) return true;
-    for (var i = 0; i < SPIN_RULES.length; i++) {
-      if (getBest(SPIN_RULES[i][0]) >= SPIN_RULES[i][1]) {
-        markUnlocked(SPIN_RULES[i][0]);
-        return true;
-      }
-    }
-    return false;
+    return Object.keys(readUnlocked()).length > 0;
   }
 
   function paintGates() {
@@ -95,7 +88,7 @@
         a.removeAttribute("aria-disabled");
       } else {
         a.removeAttribute("href");
-        a.textContent = "Need a higher score to spin.";
+        a.textContent = "Play a game to spin.";
         a.style.pointerEvents = "none";
         a.style.textDecoration = "none";
         a.setAttribute("aria-disabled", "true");
@@ -122,17 +115,15 @@
     var prior = typeof opts.prior === "number" ? opts.prior : getBest(opts.key);
     var best = opts.key ? setBest(opts.key, score) : Math.max(prior, score);
     var spinAt = typeof opts.spinAt === "number" ? opts.spinAt : null;
-    var earned = spinAt !== null && score >= spinAt;
-    if (earned) markUnlocked(opts.game || opts.key || "play");
-    else if (spinAt !== null && best >= spinAt) markUnlocked(opts.game || opts.key || "play");
+    var earned = true;
+    markUnlocked(opts.game || opts.key || "play");
 
     var line = document.getElementById("win-line");
     var spin = document.getElementById("win-spin");
     var sms = document.getElementById("sms-line");
     if (line) {
       line.hidden = spinAt === null;
-      if (earned) line.textContent = "Score " + score + ". Stead Spin is open.";
-      else if (spinAt !== null) line.textContent = "Score " + score + ". Need " + spinAt + " to spin.";
+      line.textContent = "You played. Stead Spin is open.";
     }
     if (spin) spin.hidden = !earned;
     if (sms) sms.hidden = !earned;
@@ -143,10 +134,7 @@
   /* Games call this with their own SPIN_AT so a saved best can open the hub link. */
   function noteSpin(id, best, spinAt) {
     var target = document.getElementById("spin-target");
-    if (target && typeof spinAt === "number") {
-      target.textContent = "Stead Spin opens at " + spinAt + ".";
-    }
-    if (typeof spinAt === "number" && best >= spinAt) markUnlocked(id || "play");
+    if (target) target.textContent = "Finish a game to spin.";
     paintGates();
   }
 
