@@ -2,24 +2,26 @@
 (function () {
   var KEY = "coc-play-ducks-to-bed-best";
   /* Stead Spin unlock: win the round once.
-     Clear = all 17 domestics in, door shut, wild ducks treated. */
+     Clear = all 18 domestics in, door shut, wild ducks treated. */
   var SPIN_AT = 1;
   var FACT = "The ducks live with the chickens, and they lay eggs on the ground instead of in the nesting boxes the way the chickens do.";
   var W = 340, H = 480;
-  var TOTAL = 17;
+  var TOTAL = 18;
   var MAX_ESCAPES = 5;
   var DOOR_X = 120, DOOR_W = 100, DOOR_Y = 58, DOOR_H = 70;
   var BARN_TOP = 28, BARN_H = 110;
   var SEG = 18;
   var PLAYER_R = 14;
 
-  /* 2 white geese, 2 gray geese, 5 runners, 8 peking = 17 */
+  /* 2 white geese, 2 gray geese, 5 runners, 8 peking, 1 Royal Palm turkey = 18.
+     Royal Palm is game-only — do not claim the farm owns one in player-facing copy. */
   var FLOCK_KINDS = [
     "white-goose", "white-goose",
     "gray-goose", "gray-goose",
     "runner", "runner", "runner", "runner", "runner",
     "peking", "peking", "peking", "peking",
-    "peking", "peking", "peking", "peking"
+    "peking", "peking", "peking", "peking",
+    "royal-palm"
   ];
 
   /* Elon is always out — constant nuisance from the start.
@@ -216,7 +218,7 @@
     bestEl.textContent = String(result.best);
     overlayTitle.textContent = won ? "Barn's quiet" : "They got away";
     if (won) {
-      overlayMsg.textContent = "All 17 put away, door shut, wild ducks treated. Best clears: " + result.best + ".";
+      overlayMsg.textContent = "All 18 put away, door shut, wild ducks treated. Best clears: " + result.best + ".";
     } else {
       overlayMsg.textContent = "Too many escapes (" + state.escapes + "). Critter lady steers them in, shuts the door, then treats the wilds. Dodge Elon and Betty.";
     }
@@ -420,6 +422,47 @@
       e.fillStyle = "#e8a020";
       e.beginPath(); e.moveTo(3, -11); e.lineTo(9, -10); e.lineTo(3, -9); e.fill();
       e.fillStyle = "#111"; e.beginPath(); e.arc(1.5, -12, 1, 0, Math.PI * 2); e.fill();
+    } else if (kind === "royal-palm") {
+      /* Royal Palm turkey — taller than ducks; white with black bands, red/blue head */
+      e.fillStyle = "#f7f4ee";
+      e.beginPath(); e.ellipse(0, 6, 12, 9, 0, 0, Math.PI * 2); e.fill();
+      /* black body bands */
+      e.strokeStyle = "#1a1a1a";
+      e.lineWidth = 2.2;
+      e.beginPath(); e.ellipse(0, 4, 10, 6.5, 0, 0.15, Math.PI - 0.15); e.stroke();
+      e.beginPath(); e.ellipse(0, 8, 9, 5.5, 0, 0.2, Math.PI - 0.2); e.stroke();
+      /* black wing bars */
+      e.fillStyle = "#151515";
+      e.fillRect(-11, 2, 5, 2.4);
+      e.fillRect(6, 2, 5, 2.4);
+      /* fanned tail with black bars */
+      e.fillStyle = "#f7f4ee";
+      for (var ti = -3; ti <= 3; ti++) {
+        e.save();
+        e.translate(ti * 3.2, 12);
+        e.rotate(ti * 0.12);
+        e.beginPath(); e.ellipse(0, 0, 2.2, 7, 0, 0, Math.PI * 2); e.fill();
+        e.fillStyle = "#1a1a1a";
+        e.fillRect(-1.6, -2, 3.2, 1.6);
+        e.fillRect(-1.4, 2, 2.8, 1.4);
+        e.fillStyle = "#f7f4ee";
+        e.restore();
+      }
+      /* neck */
+      e.fillStyle = "#f0ebe3";
+      e.fillRect(-2, -6, 4, 8);
+      /* red/blue head (snood/wattles feel) */
+      var hg = e.createLinearGradient(-4, -14, 4, -6);
+      hg.addColorStop(0, "#2a5a9a");
+      hg.addColorStop(0.45, "#c62828");
+      hg.addColorStop(1, "#8b1e3a");
+      e.fillStyle = hg;
+      e.beginPath(); e.ellipse(0, -11, 5.5, 5, 0, 0, Math.PI * 2); e.fill();
+      e.fillStyle = "#e53935";
+      e.beginPath(); e.ellipse(0, -6.5, 3.5, 2.2, 0, 0, Math.PI * 2); e.fill();
+      e.fillStyle = "#f5f0e6";
+      e.beginPath(); e.arc(-2, -12, 1.1, 0, Math.PI * 2); e.fill();
+      e.fillStyle = "#111"; e.beginPath(); e.arc(-2, -12, 0.55, 0, Math.PI * 2); e.fill();
     } else {
       /* peking — plump white */
       e.fillStyle = "#fff8e7";
@@ -629,7 +672,7 @@
     e.font = "9px sans-serif";
     e.textAlign = "left";
     e.fillStyle = "rgba(245,240,230,0.7)";
-    e.fillText("White goose · Gray goose · Runner · Peking", 8, H - 4);
+    e.fillText("White goose · Gray goose · Runner · Peking · Royal Palm", 8, H - 4);
   }
 
   function loop(ts) {
@@ -644,7 +687,7 @@
   function shutDoor() {
     if (!state || state.over || state.doorShut) return;
     if (countIn() < TOTAL) {
-      state.msg = "Get all 17 inside first";
+      state.msg = "Get all 18 inside first";
       state.msgT = 1.4;
       return;
     }
