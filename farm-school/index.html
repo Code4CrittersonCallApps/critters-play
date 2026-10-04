@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1f6b3a" />
+<meta name="description" content="Farm School. Five short lessons a parent can do on the farm with a kid, and a five-question check." />
+<title>Farm School</title>
+<style>
+  :root {
+    --bg: #e6f0e4;
+    --ink: #1b2a1e;
+    --muted: #3e5344;
+    --card: #fffdf8;
+    --line: #c9d7c6;
+    --green: #1f6b3a;
+    --green-dark: #164e2a;
+    --good: #1f6b3a;
+    --bad: #8d3a2f;
+    --sand: #f3ead7;
+    --shadow: 0 8px 24px rgba(27, 42, 30, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100dvh;
+    -webkit-text-size-adjust: 100%;
+  }
+  button, a { font: inherit; }
+  .app {
+    max-width: 28rem;
+    margin: 0 auto;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding:
+      calc(0.75rem + env(safe-area-inset-top))
+      1rem
+      calc(1.25rem + env(safe-area-inset-bottom));
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3rem;
+    margin-bottom: 0.75rem;
+  }
+  header h1 {
+    font-size: 1.35rem;
+    line-height: 1.1;
+    margin: 0;
+    font-weight: 700;
+  }
+  #back {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    border-radius: 999px;
+    min-height: 2.75rem;
+    padding: 0 0.9rem;
+    font-weight: 650;
+  }
+  #back[hidden] { display: none; }
+  main { flex: 1; }
+  .stack { display: flex; flex-direction: column; gap: 0.75rem; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 1.1rem;
+    padding: 1.1rem 1rem;
+    box-shadow: var(--shadow);
+  }
+  p { margin: 0 0 0.75rem; line-height: 1.45; font-size: 1.05rem; }
+  p:last-child { margin-bottom: 0; }
+  .muted { color: var(--muted); }
+  .teacher { font-size: 0.98rem; }
+  .big-btn, .choice, .lesson-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 4.25rem;
+    text-align: left;
+    text-decoration: none;
+    color: white;
+    background: var(--green);
+    border: 0;
+    border-radius: 1rem;
+    padding: 0.85rem 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: var(--shadow);
+  }
+  .big-btn.secondary, .lesson-row {
+    background: var(--card);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    font-weight: 650;
+  }
+  .big-btn:active, .choice:active, .lesson-row:active { transform: translateY(1px); }
+  .emoji {
+    font-size: 1.8rem;
+    line-height: 1;
+    width: 2.4rem;
+    text-align: center;
+    flex: none;
+  }
+  .do {
+    background: var(--sand);
+    border-radius: 0.9rem;
+    padding: 0.9rem 1rem;
+  }
+  .do strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .progress {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .q {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 0.85rem;
+  }
+  .choice {
+    background: var(--card);
+    color: var(--ink);
+    border: 2px solid var(--line);
+    font-weight: 650;
+    font-size: 1.08rem;
+  }
+  .choice.good { border-color: var(--good); background: #e5f5e8; }
+  .choice.bad { border-color: var(--bad); background: #fbeceb; }
+  .choice:disabled { opacity: 1; }
+  .score-num {
+    font-size: 3.4rem;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0.2rem 0 0.4rem;
+  }
+  .stepup {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  .stepup a { color: var(--green-dark); font-weight: 700; }
+  .note {
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <button type="button" id="back" hidden>Back</button>
+    <h1>Farm School</h1>
+  </header>
+  <main id="screen"></main>
+</div>
+<script>
+(function () {
+  var lessons = [
+    {
+      title: "Animals",
+      emoji: "🐐",
+      body: "Goats, chickens, ducks, and the guardian dogs each need food, water, and a calm person. Watch an animal before you touch it. If you run or yell, it can get scared and move away.",
+      outside: "Stand still with your kid. Name three animals you can see. Say what each one is doing with its mouth, feet, or body."
+    },
+    {
+      title: "Plants",
+      emoji: "🌱",
+      body: "A plant uses sunlight, water, and air to grow. Grass is food for the goats. A leaf catches the light. The stem holds the leaf up. The roots stay in the soil and take in water.",
+      outside: "Find one plant that is still in the ground. Point to a leaf, the stem, and the spot where it goes into the dirt. Leave it growing."
+    },
+    {
+      title: "Water",
+      emoji: "🪣",
+      body: "Animals and plants both need water. A trough or a bucket is the animals' drink. People do not drink that water. If it is empty, dirty, or tipped over, the animals cannot use it.",
+      outside: "Find one place the animals drink. Look only. Say if it needs more water, or if it looks ready for them."
+    },
+    {
+      title: "Weather",
+      emoji: "☀️",
+      body: "The sky changes the farm day. Hot sun means shade and more water. Rain makes mud and fills low spots. Wind can blow loose bedding around. Look at the clouds before a long walk.",
+      outside: "Look up, then look at the ground. Name the weather in one word: sunny, cloudy, rainy, or windy. Name one thing the animals need because of that."
+    },
+    {
+      title: "Putting the birds to bed",
+      emoji: "🌙",
+      body: "At the end of the day, the chickens and ducks go inside a house. A grown-up shuts the door. A shut door keeps the birds in and keeps other animals out. Count them so none are left outside.",
+      outside: "With a grown-up, help bring the birds to the house and count them. Watch the door shut. If it is not bedtime, count the birds you can see and say what the shut door is for."
+    }
+  ];
+
+  var questions = [
+    {
+      q: "What do you do first with a farm animal?",
+      choices: [
+        { pic: "👀", label: "Watch it", ok: true },
+        { pic: "🏃", label: "Run at it", ok: false },
+        { pic: "📣", label: "Yell at it", ok: false }
+      ]
+    },
+    {
+      q: "What job does a leaf do?",
+      choices: [
+        { pic: "☀️", label: "Catch light", ok: true },
+        { pic: "🪣", label: "Hold the animals' drink", ok: false },
+        { pic: "🚪", label: "Shut the bird door", ok: false }
+      ]
+    },
+    {
+      q: "Who drinks from the animal trough?",
+      choices: [
+        { pic: "🐐", label: "The animals", ok: true },
+        { pic: "🧒", label: "The kids", ok: false },
+        { pic: "☁️", label: "Only the clouds", ok: false }
+      ]
+    },
+    {
+      q: "On a hot sunny day, the animals need…",
+      choices: [
+        { pic: "🌳", label: "Shade and more water", ok: true },
+        { pic: "🧣", label: "A winter coat", ok: false },
+        { pic: "🚫", label: "No water", ok: false }
+      ]
+    },
+    {
+      q: "Why shut the bird house door at night?",
+      choices: [
+        { pic: "🔒", label: "So the birds stay in and stay safe", ok: true },
+        { pic: "🎉", label: "So they can have a party", ok: false },
+        { pic: "🌲", label: "So they sleep in the trees", ok: false }
+      ]
+    }
+  ];
+
+  var screen = document.getElementById("screen");
+  var backBtn = document.getElementById("back");
+  var game = { i: 0, score: 0, locked: false };
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function showHome() {
+    backBtn.hidden = true;
+    screen.innerHTML =
+      '<div class="stack">' +
+        '<div class="card">' +
+          '<p>Five short lessons a parent can do on the farm with a kid. Then five questions.</p>' +
+          '<p class="teacher">Ann-Marie Sheehan is the teacher. She is certified, has a master\'s degree, taught in Duval County, and is a Step Up evaluator.</p>' +
+        '</div>' +
+        '<button type="button" class="big-btn" data-go="lessons"><span class="emoji">📖</span><span>Lessons</span></button>' +
+        '<button type="button" class="big-btn secondary" data-go="game"><span class="emoji">✅</span><span>Game</span></button>' +
+        '<p class="stepup">Parents who pay with Step Up can <a href="https://www.stepupforstudents.org/scholarships/logins/">log in or start</a>.</p>' +
+      '</div>';
+  }
+
+  function showLessons() {
+    backBtn.hidden = false;
+    backBtn.onclick = showHome;
+    var rows = lessons.map(function (lesson, i) {
+      return '<button type="button" class="lesson-row" data-lesson="' + i + '">' +
+        '<span class="emoji">' + lesson.emoji + '</span>' +
+        '<span>' + (i + 1) + '. ' + esc(lesson.title) + '</span>' +
+      '</button>';
+    }).join("");
+    screen.innerHTML = '<div class="stack">' + rows + '</div>';
+  }
+
+  function showLesson(i) {
+    var lesson = lessons[i];
+    backBtn.hidden = false;
+    backBtn.onclick = showLessons;
+    var next = i < lessons.length - 1
+      ? '<button type="button" class="big-btn" data-lesson="' + (i + 1) + '">Next lesson</button>'
+      : '<button type="button" class="big-btn" data-go="game">Play the game</button>';
+    screen.innerHTML =
+      '<div class="stack">' +
+        '<p class="progress">Lesson ' + (i + 1) + ' of ' + lessons.length + '</p>' +
+        '<div class="card">' +
+          '<p class="emoji" aria-hidden="true">' + lesson.emoji + '</p>' +
+          '<h2 style="margin:0 0 0.6rem;font-size:1.45rem">' + esc(lesson.title) + '</h2>' +
+          '<p>' + esc(lesson.body) + '</p>' +
+          '<div class="do"><strong>Outside</strong><p>' + esc(lesson.outside) + '</p></div>' +
+        '</div>' +
+        next +
+        '<button type="button" class="big-btn secondary" data-go="lessons">All lessons</button>' +
+      '</div>';
+  }
+
+  function showQuestion() {
+    var item = questions[game.i];
+    backBtn.hidden = false;
+    backBtn.onclick = showHome;
+    var choices = item.choices.map(function (c, n) {
+      return '<button type="button" class="choice" data-choice="' + n + '">' +
+        '<span class="emoji">' + c.pic + '</span><span>' + esc(c.label) + '</span>' +
+      '</button>';
+    }).join("");
+    screen.innerHTML =
+      '<div class="stack">' +
+        '<p class="progress">Question ' + (game.i + 1) + ' of ' + questions.length + '</p>' +
+        '<div class="card"><p class="q">' + esc(item.q) + '</p><div class="stack" id="choices">' + choices + '</div></div>' +
+        '<p class="note" id="why" hidden></p>' +
+        '<button type="button" class="big-btn" id="nextq" hidden>Next</button>' +
+      '</div>';
+    game.locked = false;
+  }
+
+  function pick(n) {
+    if (game.locked) return;
+    game.locked = true;
+    var item = questions[game.i];
+    var buttons = screen.querySelectorAll("[data-choice]");
+    buttons.forEach(function (btn, idx) {
+      btn.disabled = true;
+      if (item.choices[idx].ok) btn.classList.add("good");
+      else if (idx === n) btn.classList.add("bad");
+    });
+    if (item.choices[n].ok) game.score += 1;
+    var why = document.getElementById("why");
+    why.hidden = false;
+    why.textContent = item.choices[n].ok ? "Yes." : "Not that one. The green picture is the one from the lesson.";
+    var next = document.getElementById("nextq");
+    next.hidden = false;
+    next.textContent = game.i === questions.length - 1 ? "See score" : "Next";
+    next.onclick = function () {
+      if (game.i === questions.length - 1) showScore();
+      else {
+        game.i += 1;
+        showQuestion();
+      }
+    };
+  }
+
+  function showScore() {
+    backBtn.hidden = false;
+    backBtn.onclick = showHome;
+    screen.innerHTML =
+      '<div class="stack">' +
+        '<div class="card">' +
+          '<p class="muted">Score</p>' +
+          '<p class="score-num">' + game.score + ' / ' + questions.length + '</p>' +
+          '<p>That is ' + game.score + ' out of ' + questions.length + '.</p>' +
+        '</div>' +
+        '<button type="button" class="big-btn" data-go="game">Play again</button>' +
+        '<button type="button" class="big-btn secondary" data-go="lessons">Lessons</button>' +
+      '</div>';
+  }
+
+  function startGame() {
+    game.i = 0;
+    game.score = 0;
+    game.locked = false;
+    showQuestion();
+  }
+
+  function go(name) {
+    if (name === "home") showHome();
+    else if (name === "lessons") showLessons();
+    else if (name === "game") startGame();
+  }
+
+  screen.addEventListener("click", function (ev) {
+    var t = ev.target.closest("[data-go],[data-lesson],[data-choice]");
+    if (!t) return;
+    if (t.hasAttribute("data-go")) go(t.getAttribute("data-go"));
+    else if (t.hasAttribute("data-lesson")) showLesson(Number(t.getAttribute("data-lesson")));
+    else if (t.hasAttribute("data-choice")) pick(Number(t.getAttribute("data-choice")));
+  });
+
+  showHome();
+})();
+</script>
+</body>
+</html>

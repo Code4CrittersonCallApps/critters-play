@@ -9,6 +9,8 @@ Games: **Pyrenees Guard** · **Evade Elon** · **Barncat Defender** · **Ducks t
 ## Live
 https://Code4CrittersonCallApps.github.io/critters-play/
 
+Farm School (lessons and a five-question check, not the games): https://Code4CrittersonCallApps.github.io/critters-play/farm-school/
+
 ## Open locally
 ```bash
 python3 -m http.server 8771
