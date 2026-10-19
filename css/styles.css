@@ -999,3 +999,9 @@ p { margin: 0; }
 .dtb-controls #btn-treat { flex: 1.4; }
 .dtb-controls #btn-door[hidden],
 .dtb-controls #btn-treat[hidden] { display: none !important; }
+
+/* Barn Cat calm mode (Gold calm-down game) */
+.calm-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.35rem 0 0; }
+.calm-row:not(:has(:not([hidden]))) { display: none; }
+.calm-chip { display: inline-block; font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 999px; background: rgba(106, 158, 106, 0.18); color: #3f6b3f; }
+.calm-music { min-height: 2.25rem; padding: 0.3rem 0.8rem; font-size: 0.85rem; width: auto; }

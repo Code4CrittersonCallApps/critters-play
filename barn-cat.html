@@ -29,6 +29,7 @@
   <main class="main">
     <div class="game-shell">
       <p class="game-lede text-sm muted">Tuxedo barn cat — whack mice &amp; snakes as they pop from the hay.</p>
+      <p class="calm-row" id="calm-row"><span class="calm-chip" id="calm-chip" hidden>Calm mode · slow &amp; easy</span><button type="button" class="btn btn-outline calm-music" id="music-btn" aria-pressed="false" hidden>♪ Music off</button></p>
       <div class="game-hud">
         <div class="hud-stat"><span class="hud-label">Score</span><span class="hud-value tabular" id="score">0</span></div>
         <div class="hud-stat"><span class="hud-label">Wave</span><span class="hud-value tabular" id="wave">1</span></div>
@@ -56,6 +57,7 @@
   </main>
 </div>
 <script src="js/scores.js?v=scoregate"></script>
-<script src="js/barn-cat.js"></script>
+<script src="js/calm-audio.js?v=calm1"></script>
+<script src="js/barn-cat.js?v=calm1"></script>
 </body>
 </html>

@@ -6,6 +6,14 @@
   var SPIN_AT = 300;
   var W = 340, H = 420, COLS = 3, ROWS = 3;
 
+  /* Calm mode (the Gold "calm-down game"): ?calm=1 turns it on for this visit.
+     Slower pests, longer windows, more lives, fewer snakes, soft generated music.
+     The default game (no param) is unchanged. */
+  var CALM = /[?&]calm=1(&|$)/.test(location.search);
+  var TUNE = CALM
+    ? { lives: 8, spawn: 1900, spawnMin: 1400, spawnStep: 20, waveSec: 35, lifeBase: 2.8, lifeMin: 1.8, lifeWave: 0.04, rise: 2.2, snake: 0.15 }
+    : { lives: 5, spawn: 1200, spawnMin: 520, spawnStep: 45, waveSec: 22, lifeBase: 1.55, lifeMin: 0.75, lifeWave: 0.05, rise: 3.2, snake: 0.22 };
+
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var scoreEl = document.getElementById("score");
@@ -207,14 +215,14 @@
   function resetState() {
     state = {
       holes: makeHoles(),
-      score: 0, lives: 5, combo: 0,
-      spawnAcc: 0, spawnEvery: 1200,
+      score: 0, lives: TUNE.lives, combo: 0,
+      spawnAcc: 0, spawnEvery: TUNE.spawn,
       wave: 1, waveAcc: 0, over: false,
       swat: 0, catX: W / 2, catY: H - 58,
       pop: "", popT: 0
     };
     scoreEl.textContent = "0";
-    livesEl.textContent = "5";
+    livesEl.textContent = String(TUNE.lives);
     if (waveEl) waveEl.textContent = "1";
     if (comboEl) comboEl.textContent = "0";
   }
@@ -281,17 +289,17 @@
       var free = s.holes.filter(function (h) { return !h.pest; });
       if (free.length) {
         var t = free[Math.floor(Math.random() * free.length)];
-        t.pest = Math.random() < 0.22 ? "snake" : "mouse";
+        t.pest = Math.random() < TUNE.snake ? "snake" : "mouse";
         t.rise = 0;
         t.rising = true;
-        t.life = Math.max(0.75, 1.55 - s.wave * 0.05);
+        t.life = Math.max(TUNE.lifeMin, TUNE.lifeBase - s.wave * TUNE.lifeWave);
       }
     }
     s.waveAcc += dt;
-    if (s.waveAcc > 22) {
+    if (s.waveAcc > TUNE.waveSec) {
       s.waveAcc = 0;
       s.wave += 1;
-      s.spawnEvery = Math.max(520, s.spawnEvery - 45);
+      s.spawnEvery = Math.max(TUNE.spawnMin, s.spawnEvery - TUNE.spawnStep);
       if (waveEl) waveEl.textContent = String(s.wave);
     }
 
@@ -300,7 +308,7 @@
       if (t.hit > 0) t.hit = Math.max(0, t.hit - dt * 4);
       if (!t.pest) continue;
       if (t.rising) {
-        t.rise = Math.min(1, t.rise + dt * 3.2);
+        t.rise = Math.min(1, t.rise + dt * TUNE.rise);
         if (t.rise >= 1) { t.rising = false; t.life -= dt; }
       } else {
         t.life -= dt;
@@ -388,6 +396,35 @@
     running = true;
     last = 0;
     if (hintEl) hintEl.style.visibility = "visible";
+    if (CALM && musicWanted && global_CalmAudio()) { global_CalmAudio().start(); syncMusic(); }
+  }
+
+  /* Calm mode UI + music toggle */
+  var musicWanted = true;
+  var musicBtn = document.getElementById("music-btn");
+  var calmChip = document.getElementById("calm-chip");
+  function global_CalmAudio() { return window.CalmAudio || null; }
+  function syncMusic() {
+    if (!musicBtn) return;
+    var isOn = global_CalmAudio() && global_CalmAudio().isOn();
+    musicBtn.textContent = isOn ? "♪ Music on" : "♪ Music off";
+    musicBtn.setAttribute("aria-pressed", isOn ? "true" : "false");
+  }
+  if (CALM) {
+    if (calmChip) calmChip.hidden = false;
+    if (musicBtn) {
+      musicBtn.hidden = false;
+      musicBtn.addEventListener("click", function () {
+        if (!global_CalmAudio()) return;
+        musicWanted = global_CalmAudio().toggle();
+        syncMusic();
+      });
+      syncMusic();
+    }
+    overlayTitle.textContent = "Calm barn watch";
+    overlayMsg.textContent = "Slow and gentle. Soft music plays. Tap a mouse or snake when it peeks out of the hay. No rush; you have " + TUNE.lives + " lives.";
+    startBtn.textContent = "Start calm watch";
+    if (hintEl) hintEl.textContent = "Take a slow breath. Tap a pest when it peeks up.";
   }
 
   startBtn.addEventListener("click", start);
